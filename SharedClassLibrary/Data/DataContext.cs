@@ -10,7 +10,7 @@ namespace SharedClassLibrary.Data
 {
     public class DataContext: DbContext
     {
-        public DataContext() : base()
+        public DataContext(DbContextOptions options) : base(options)
         {
         }
 

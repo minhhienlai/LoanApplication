@@ -13,11 +13,6 @@ namespace SharedClassLibrary.Repositories
     {
         private DataContext _context;
         private DbSet<T> table;
-        public GenericRepository()
-        {
-            this._context = new DataContext();
-            table = _context.Set<T>();
-        }
         public GenericRepository(DataContext _context)
         {
             this._context = _context;

@@ -10,7 +10,7 @@ namespace SharedClassLibrary.Repositories
 {
     public class UnitOfWork : IDisposable
     {
-        private DataContext context = new DataContext();
+        private DataContext context;
         private GenericRepository<DemographicModel> demographicRepository;
         private GenericRepository<BusinessModel> businessRepository;
         private GenericRepository<LoanAppModel> loanAppRepository;

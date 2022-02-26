@@ -17,7 +17,7 @@ namespace LoanAppMVC.Controllers
 
         public DemographicController()
         {
-            client.BaseAddress = new Uri("https://localhost:7033/api/");
+            client.BaseAddress = new Uri("http://localhost:5033");
         }
 
         // GET: Demographic

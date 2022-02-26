@@ -1,4 +1,5 @@
 ﻿using LoanAppMVC.Models;
+using SharedClassLibrary.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,8 @@ namespace SharedClassLibrary.Repositories
 {
     internal class BusinessRepository : GenericRepository<BusinessModel>
     {
+        public BusinessRepository(DataContext _context) : base(_context)
+        {
+        }
     }
 }

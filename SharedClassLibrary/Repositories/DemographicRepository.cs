@@ -11,6 +11,8 @@ namespace SharedClassLibrary.Repositories
 {
     internal class DemographicRepository : GenericRepository<DemographicModel>
     {
-        
+        public DemographicRepository(DataContext _context) : base(_context)
+        {
+        }
     }
 }
