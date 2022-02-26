@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LoanAppMVC.Models;
+using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Controllers
 {
@@ -14,15 +14,20 @@ namespace LoanAppMVC.Controllers
     {
         static HttpClient client = new HttpClient();
         string apiController = "Demographic";
+        //string nextController = "Business";
 
-        public DemographicController()
+        public DemographicController(IConfiguration configuration)
         {
-            client.BaseAddress = new Uri("http://localhost:5033");
+            if (client.BaseAddress == null)
+            {
+                client.BaseAddress = new Uri(configuration.GetValue<string>("baseApiUri"));
+            }
         }
 
         // GET: Demographic
         public async Task<IActionResult> Index()
         {
+            
             IList<DemographicModel> models = new List<DemographicModel>();
 
             var result = await client.GetAsync(apiController);
@@ -84,7 +89,8 @@ namespace LoanAppMVC.Controllers
 
                 if (result.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    int newId = result.Content.ReadAsAsync<int>().Result;
+                    return RedirectToAction("Create", "Business", new { ownerId = newId});
                 }
                 else
                 {
@@ -128,6 +134,7 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
         {
+            int oid=0;
             if (id != model.Id)
             {
                 return NotFound();
@@ -143,9 +150,11 @@ namespace LoanAppMVC.Controllers
                 var result = await client.PutAsJsonAsync<DemographicModel>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    oid = result.Content.ReadAsAsync<int>().Result;
+                    return RedirectToAction("List","Business", new { ownerId= oid });
                 }
             }
+            ViewData["OwnerId"] = oid;
             return View(model);
         }
 
@@ -156,33 +165,35 @@ namespace LoanAppMVC.Controllers
             {
                 return NotFound();
             }
+            var result = await client.DeleteAsync(apiController + "/" + id.ToString());
+            return RedirectToAction("Index");
 
-            DemographicModel model = new DemographicModel();
+            //DemographicModel model = new DemographicModel();
 
-            var result = await client.GetAsync(apiController+"/" + id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<DemographicModel>();
-                readTask.Wait();
+            //var result = await client.GetAsync(apiController + "/" + id.ToString());
+            //if (result.IsSuccessStatusCode)
+            //{
+            //    var readTask = result.Content.ReadAsAsync<DemographicModel>();
+            //    readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
-            return View(model);
+            //    model = readTask.Result;
+            //}
+            //else //web api sent error response 
+            //{
+            //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+            //    return NotFound();
+            //}
+            //return View(model);
         }
 
         // POST: Demographic/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await client.DeleteAsync(apiController+"/" + id.ToString());
-            return RedirectToAction("Index");
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var result = await client.DeleteAsync(apiController+"/" + id.ToString());
+        //    return RedirectToAction("Index");
 
-        }
+        //}
     }
 }

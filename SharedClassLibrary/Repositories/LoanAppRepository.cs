@@ -1,5 +1,5 @@
-﻿using LoanAppMVC.Models;
-using SharedClassLibrary.Data;
+﻿using SharedClassLibrary.Data;
+using SharedClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.Repositories
 {
-    internal class LoanAppRepository : GenericRepository<LoanAppModel>
+    public class LoanAppRepository : GenericRepository<LoanAppModel>
     {
         public LoanAppRepository(DataContext _context) : base(_context)
         {
+        }
+        public override IEnumerable<LoanAppModel> GetByParentId(int businessId)
+        {
+            return table.Where(b => b.BusinessId == businessId).ToList();
         }
     }
 }

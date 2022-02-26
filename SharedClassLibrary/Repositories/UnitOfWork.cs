@@ -1,5 +1,5 @@
-﻿using LoanAppMVC.Models;
-using SharedClassLibrary.Data;
+﻿using SharedClassLibrary.Data;
+using SharedClassLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +10,27 @@ namespace SharedClassLibrary.Repositories
 {
     public class UnitOfWork : IDisposable
     {
-        private DataContext context;
+        public DataContext context;
+        private ListRepository listRepository;
         private GenericRepository<DemographicModel> demographicRepository;
         private GenericRepository<BusinessModel> businessRepository;
         private GenericRepository<LoanAppModel> loanAppRepository;
 
+        public ListRepository ListRepository {
+            get {
+                if (this.listRepository == null) {
+                    this.listRepository = new ListRepository(context);
+                }
+                return listRepository;
+            }
+        }
         public GenericRepository<DemographicModel> DemographicRepository
         {
             get
             {
-
                 if (this.demographicRepository == null)
                 {
-                    this.demographicRepository = new GenericRepository<DemographicModel>(context);
+                    this.demographicRepository = new DemographicRepository(context);
                 }
                 return demographicRepository;
             }
@@ -31,10 +39,9 @@ namespace SharedClassLibrary.Repositories
         {
             get
             {
-
                 if (this.businessRepository == null)
                 {
-                    this.businessRepository = new GenericRepository<BusinessModel>(context);
+                    this.businessRepository = new BusinessRepository(context);
                 }
                 return businessRepository;
             }
@@ -43,10 +50,9 @@ namespace SharedClassLibrary.Repositories
         {
             get
             {
-
                 if (this.loanAppRepository == null)
                 {
-                    this.loanAppRepository = new GenericRepository<LoanAppModel>(context);
+                    this.loanAppRepository = new LoanAppRepository(context);
                 }
                 return loanAppRepository;
             }

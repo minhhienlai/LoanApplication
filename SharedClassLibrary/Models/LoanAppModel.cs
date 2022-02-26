@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LoanAppMVC.Models
+namespace SharedClassLibrary.Models
 {
     public class LoanAppModel
     {
@@ -21,6 +22,9 @@ namespace LoanAppMVC.Models
         [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DateProcessed { get; set; }
         public int Status { get; set; }
+
+        [ForeignKey("Business")]
+        public int BusinessId { get; set; }
         public BusinessModel Business { get; set; }
     }
 }
