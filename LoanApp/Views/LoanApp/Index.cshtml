@@ -1,0 +1,89 @@
+﻿@model IEnumerable<LoanAppMVC.Models.LoanAppModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayBackInMonths)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.APRPercent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreditScore)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LatePaymentRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalDebt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RiskRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateSubmitted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateProcessed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayBackInMonths)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.APRPercent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreditScore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LatePaymentRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalDebt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RiskRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSubmitted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateProcessed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
