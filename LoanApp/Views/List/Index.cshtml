@@ -1,47 +1,82 @@
-﻿@using SharedClassLibrary.Models
-@model IEnumerable<ListModel>
+﻿@using LoanAppMVC.Models
+@model SearchResultViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Loan Application list</h1>
 
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Search" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <label class="control-label">Applicant name</label>
+                <input type="text" name="app" value="@Model.app"  />
+           </div> <br/>
+            <div class="form-group">
+                <label class="control-label">Business code</label>
+                <input type="text" name="bcode"  value="@Model.bcode"/>
+            
+                <label class="control-label">Business name</label>
+                <input type="text" name="bname" value="@Model.bname" />
+            </div> <br/>
+            <div class="form-group">
+                <label class="control-label">Credit score from</label>
+                <input type="number" name="MinScore" value="@Model.MinScore" />
+                <label class="control-label">To</label>
+                <input type="number" name="MaxScore" value="@Model.MaxScore"/>
+            </div> <br/>
+            <div class="form-group">
+                <label class="control-label">Amount from</label>
+                <input type="number" name="MinAmount" value="@Model.MinAmount" />
+                <label class="control-label">To</label>
+                <input type="number" name="MaxAmount" value="@Model.MaxAmount" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
 <p>
-    <a asp-action="Create" asp-controller="Demographic">Create New</a>
+    <a asp-action="Create" asp-controller="Demographic" class="btn btn-primary">Create New</a>
+    <a asp-action="Index" asp-controller="List" class="btn btn-primary">Reset</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DemographicName)
+                DemographicName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhoneNo)
+                PhoneNo
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BusinessCode)
+                BusinessCode
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BusinessName)
+               BusinessName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Amount)
+                Amount
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreditScore)
+                CreditScore
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RiskRate)
+                RiskRate
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.searchResult) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DemographicName)

@@ -22,7 +22,7 @@ namespace SharedClassLibrary.Data
         {
             modelBuilder.Entity<DemographicModel>()
                 .ToTable("Demographics")
-                .HasIndex(d => new { d.Name, d.PhoneNo, d.Email });
+                .HasIndex(d => new { d.Name });
             modelBuilder.Entity<DemographicModel>()
                 .HasMany(d => d.Business)
                 .WithOne(b => b.Owner)
@@ -37,7 +37,7 @@ namespace SharedClassLibrary.Data
 
             modelBuilder.Entity<LoanAppModel>()
                 .ToTable("LoanApps")
-                .HasIndex(l => new { l.Amount, l.CreditScore, l.RiskRate });
+                .HasIndex(l => new { l.Amount, l.CreditScore});
             
         }
     }

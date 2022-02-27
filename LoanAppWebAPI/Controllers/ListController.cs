@@ -39,6 +39,17 @@ namespace LoanAppWebAPI.Controllers
             return Ok(results);
         }
 
+        [HttpGet]
+        [Route("Search")]
+        public IActionResult Get(string? app, string? bcode, string? bname,
+            int? MinScore, int? MaxScore, int? MinAmount, int? MaxAmount)
+        {
+            IEnumerable<ListModel> results = _unitOfWork.ListRepository.Search(
+                app, bcode, bname, MinScore,  MaxScore,  MinAmount,  MaxAmount);
+            if (results.Count() == 0) return NotFound();
+            return Ok(results);
+        }
+
         // GET api/<ListController>/5
         [HttpGet("{id}")]
         public string Get(int id)
