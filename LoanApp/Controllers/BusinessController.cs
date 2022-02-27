@@ -65,32 +65,32 @@ namespace LoanAppMVC.Controllers
                 //new BusinessListViewModel { modelList = models, OwnerId  = ownerid});
         }
 
-        // GET: Business/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Business/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            BusinessModel model = new BusinessModel();
+        //    BusinessModel model = new BusinessModel();
 
-            var result = await client.GetAsync(apiController + "/" + id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<BusinessModel>();
-                readTask.Wait();
+        //    var result = await client.GetAsync(apiController + "/" + id.ToString());
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<BusinessModel>();
+        //        readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
+        //        model = readTask.Result;
+        //    }
+        //    else //web api sent error response 
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        //        return NotFound();
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         // GET: Business/Create
         public IActionResult Create(int? ownerId)
@@ -179,14 +179,14 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Business/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int? ownerId)
         {
             if (id == null)
             {
                 return NotFound();
             }
             var result = await client.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index");
+            return RedirectToAction("List","Business", new {ownerId = ownerId});
 
             //BusinessModel model = new BusinessModel();
 

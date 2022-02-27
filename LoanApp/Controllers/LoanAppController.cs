@@ -44,7 +44,7 @@ namespace LoanAppMVC.Controllers
             }
             return View(models);
         }
-        public async Task<IActionResult> List(int businessId)
+        public async Task<IActionResult> List(int businessId, int ownerId)
         {
             IList<LoanAppModel> models = new List<LoanAppModel>();
 
@@ -60,42 +60,44 @@ namespace LoanAppMVC.Controllers
             {
                 ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
             }
+            ViewData["OwnerId"] = ownerId;
             ViewData["BusinessId"] = businessId;
             return View("Index", models);
         }
 
         // GET: Business/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            LoanAppModel model = new LoanAppModel();
+        //    LoanAppModel model = new LoanAppModel();
 
-            var result = await client.GetAsync(apiController + "/" + id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<LoanAppModel>();
-                readTask.Wait();
+        //    var result = await client.GetAsync(apiController + "/" + id.ToString());
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<LoanAppModel>();
+        //        readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
+        //        model = readTask.Result;
+        //    }
+        //    else //web api sent error response 
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        //        return NotFound();
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         // GET: Business/Create
         public IActionResult Create(int? businessId)
         {
             LoanAppModel model = new LoanAppModel();
             model.BusinessId = businessId.HasValue ? businessId.Value : 0;
+            model.DateSubmitted = DateTime.Today;
             return View(model);
         }
 
@@ -176,14 +178,14 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Business/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int? businessId)
         {
             if (id == null)
             {
                 return NotFound();
             }
             var result = await client.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","List");
 
             //LoanAppModel model = new LoanAppModel();
 

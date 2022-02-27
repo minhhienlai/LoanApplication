@@ -46,31 +46,31 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Demographic/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            DemographicModel model = new DemographicModel();
+        //    DemographicModel model = new DemographicModel();
 
-            var result = await client.GetAsync(apiController+"/"+id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<DemographicModel>();
-                readTask.Wait();
+        //    var result = await client.GetAsync(apiController+"/"+id.ToString());
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<DemographicModel>();
+        //        readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
+        //        model = readTask.Result;
+        //    }
+        //    else //web api sent error response 
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        //        return NotFound();
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         // GET: Demographic/Create
         public IActionResult Create()
@@ -166,7 +166,7 @@ namespace LoanAppMVC.Controllers
                 return NotFound();
             }
             var result = await client.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","List");
 
             //DemographicModel model = new DemographicModel();
 

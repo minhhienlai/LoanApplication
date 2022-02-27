@@ -24,25 +24,25 @@
             </div>
             <div class="form-group">
                 <label asp-for="APRPercent" class="control-label"></label>
-                <input asp-for="APRPercent" class="form-control" />
+                <input asp-for="APRPercent" readonly="readonly" class="form-control" />
                 <span asp-validation-for="APRPercent" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label asp-for="CreditScore" class="control-label"></label>
                 <input asp-for="CreditScore" class="form-control" />
                 <span asp-validation-for="CreditScore" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label asp-for="LatePaymentRate" class="control-label"></label>
                 <input asp-for="LatePaymentRate" class="form-control" />
                 <span asp-validation-for="LatePaymentRate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label asp-for="TotalDebt" class="control-label"></label>
                 <input asp-for="TotalDebt" class="form-control" />
                 <span asp-validation-for="TotalDebt" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label asp-for="RiskRate" class="control-label"></label>
                 <input asp-for="RiskRate" class="form-control" />
                 <span asp-validation-for="RiskRate" class="text-danger"></span>
@@ -57,13 +57,13 @@
                 <input asp-for="DateProcessed" class="form-control" />
                 <span asp-validation-for="DateProcessed" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label asp-for="Status" class="control-label"></label>
                 <input asp-for="Status" class="form-control" />
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="BusinessId" class="form-control" />
+                <input asp-for="BusinessId" type="hidden" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-primary" />
@@ -73,7 +73,7 @@
 </div>
 
 <div>
-    <a sp-action="List" asp-route-ownerId="@Model.BusinessId">Back to List</a>
+    <a asp-action="List" asp-route-businessId="@Model.BusinessId">Back to List</a>
 </div>
 
 @section Scripts {

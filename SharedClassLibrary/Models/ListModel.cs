@@ -8,6 +8,7 @@ namespace SharedClassLibrary.Models
 {
     public class ListModel
     {
+        public int LoanApplicationId { get; set; }
         public int DemographicId { get; set; }
         public string DemographicName { get; set; }
         public string PhoneNo { get; set; }

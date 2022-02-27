@@ -25,6 +25,7 @@ namespace SharedClassLibrary.Repositories
                 .ThenInclude(o => o.Owner)
                 .Select(l => new ListModel() {
                     DemographicId = l.Business.Owner.Id
+                    ,LoanApplicationId = l.Id
                     ,DemographicName = l.Business.Owner.Name
                     ,Email = l.Business.Owner.Email
                     ,PhoneNo = l.Business.Owner.PhoneNo

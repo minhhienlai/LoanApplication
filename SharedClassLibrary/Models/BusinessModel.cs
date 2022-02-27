@@ -13,7 +13,7 @@ namespace SharedClassLibrary.Models
 
         [ForeignKey("Owner")]
         public int OwnerId { get; set; }
-        public DemographicModel Owner { get; set; }
-        public List<LoanAppModel> LoanApps { get; set; }
+        public DemographicModel? Owner { get; set; }
+        public List<LoanAppModel>? LoanApps { get; set; }
     }
 }

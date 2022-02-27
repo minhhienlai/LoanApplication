@@ -13,6 +13,6 @@ namespace SharedClassLibrary.Models
         public string PhoneNo { get; set; } 
         public string Email { get; set; }
 
-        public List<BusinessModel> Business { get; set; }
+        public List<BusinessModel>? Business { get; set; }
     }
 }

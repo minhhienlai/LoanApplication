@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\HomeController.cs" />
     <Compile Remove="Models\BusinessListViewModel.cs" />
     <Compile Remove="Models\BusinessModel.cs" />
     <Compile Remove="Models\DemographicModel.cs" />
@@ -21,7 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Business\Delete.cshtml" />
+    <Content Remove="Views\Business\Details.cshtml" />
     <Content Remove="Views\Business\List.cshtml" />
+    <Content Remove="Views\Demographic\Delete.cshtml" />
+    <Content Remove="Views\Demographic\Details.cshtml" />
+    <Content Remove="Views\LoanApp\Delete.cshtml" />
+    <Content Remove="Views\LoanApp\Details.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
