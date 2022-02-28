@@ -1,12 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LoanAppMVC.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharedClassLibrary.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LoanAppMVCContext")));
-
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LoanAppMVCContext"),b => b.MigrationsAssembly("LoanAppMVC")));
+builder.Services.AddHttpClient<IHttpClientService, LoanAppWebApiService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("baseApiUri"));
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -29,6 +33,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=List}/{action=Index}/{id?}");
 
 app.Run();

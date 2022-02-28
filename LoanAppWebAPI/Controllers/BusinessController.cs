@@ -1,70 +1,86 @@
-﻿using LoanAppMVC.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SharedClassLibrary.Data;
+using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories;
-using System.Web.Http;
+using SharedClassLibrary.Repositories.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LoanAppWebAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class BusinessController : ApiController
+    [ApiController]
+    public class BusinessController : ControllerBase
     {
-        private UnitOfWork _unitOfWork = new UnitOfWork();
-        public BusinessController()
+        private IUnitOfWork _unitOfWork;
+        public BusinessController(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
         }
+
         // GET: api/<BusinessController>
         [HttpGet]
-        public IHttpActionResult Get()
+        public IActionResult Get()
         {
-            IEnumerable<BusinessModel> results = _unitOfWork.BusinessRepository.GetAll();
+            IEnumerable<BusinessModel> results = _unitOfWork.GetBusinessRepository().GetAll();
             if (results.Count() == 0) return NotFound();
+            return Ok(results);
+        }
+        // GET api/<BusinessController>/GetByDemo/5
+        [HttpGet]
+        [Route("GetByDemo/{id}")]
+        public IActionResult GetByDemographicId(int id)
+        {
+            IEnumerable<BusinessModel> results = _unitOfWork.GetBusinessRepository().GetByParentId(id);
+            if (results == null) return NotFound();
             return Ok(results);
         }
 
         // GET api/<BusinessController>/5
-        [HttpGet]
-        [Route("api/Business/{id}")]
-        public IHttpActionResult Get(int id)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            BusinessModel results = _unitOfWork.BusinessRepository.GetById(id);
+            BusinessModel results = _unitOfWork.GetBusinessRepository().GetById(id);
             if (results == null) return NotFound();
             return Ok(results);
         }
 
         // POST api/<BusinessController>
         [HttpPost]
-        public IHttpActionResult Post([FromBody] BusinessModel value)
+        public IActionResult Post([FromBody] BusinessModel value)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-            _unitOfWork.BusinessRepository.Insert(value);
+            _unitOfWork.GetBusinessRepository().Insert(value);
             _unitOfWork.Save();
-            return Ok();
+            return Ok(value.Id);
         }
 
         // PUT api/<BusinessController>
         [HttpPut]
-        public IHttpActionResult Put([FromBody] BusinessModel value)
+        public IActionResult Put([FromBody] BusinessModel value)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
 
-            var isExist = _unitOfWork.BusinessRepository.GetById(value.Id);
-            if (isExist == null) return NotFound();
+            //var isExist = _unitOfWork.BusinessRepository.GetById(value.Id);
+            //if (isExist == null) return NotFound();
 
-            _unitOfWork.BusinessRepository.Update(value);
-            _unitOfWork.Save();
-
-            return Ok();
+            if (_unitOfWork.GetBusinessRepository().Update(value))
+            {
+                _unitOfWork.Save();
+                return Ok(value.Id);
+            }
+            return NotFound();
         }
 
         // DELETE api/<BusinessController>/5
-        [HttpDelete]
-        [Route("api/Business/{id}")]
-        public IHttpActionResult Delete(int id)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            _unitOfWork.BusinessRepository.Delete(id);
+            _unitOfWork.GetBusinessRepository().Delete(id);
             _unitOfWork.Save();
 
             return Ok();

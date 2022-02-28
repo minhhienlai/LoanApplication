@@ -3,22 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LoanAppMVC.Models;
 using SharedClassLibrary.Data;
+using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Controllers
 {
     public class LoanAppController : Controller
     {
-        static HttpClient client = new HttpClient();
+        private readonly IHttpClientService _httpClient;
         string apiController = "LoanApp";
 
-        public LoanAppController()
+        public LoanAppController(IConfiguration configuration, IHttpClientService httpClient)
         {
-            client.BaseAddress = new Uri("https://localhost:7033/api/");
+            _httpClient = httpClient;
         }
 
         // GET: Business
@@ -26,7 +27,7 @@ namespace LoanAppMVC.Controllers
         {
             IList<LoanAppModel> models = new List<LoanAppModel>();
 
-            var result = await client.GetAsync(apiController);
+            var result = await _httpClient.GetAsync(apiController);
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<IList<LoanAppModel>>();
@@ -40,38 +41,61 @@ namespace LoanAppMVC.Controllers
             }
             return View(models);
         }
-
-        // GET: Business/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> List(int businessId, int ownerId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            IList<LoanAppModel> models = new List<LoanAppModel>();
 
-            LoanAppModel model = new LoanAppModel();
-
-            var result = await client.GetAsync(apiController + "/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController + "/GetByBusiness/" + businessId.ToString());
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<LoanAppModel>();
+                var readTask = result.Content.ReadAsAsync<IList<LoanAppModel>>();
                 readTask.Wait();
 
-                model = readTask.Result;
+                models = readTask.Result;
             }
             else //web api sent error response 
             {
                 ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
             }
-
-            return View(model);
+            ViewData["OwnerId"] = ownerId;
+            ViewData["BusinessId"] = businessId;
+            return View("Index", models);
         }
 
+        // GET: Business/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    LoanAppModel model = new LoanAppModel();
+
+        //    var result = await client.GetAsync(apiController + "/" + id.ToString());
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<LoanAppModel>();
+        //        readTask.Wait();
+
+        //        model = readTask.Result;
+        //    }
+        //    else //web api sent error response 
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        //        return NotFound();
+        //    }
+
+        //    return View(model);
+        //}
+
         // GET: Business/Create
-        public IActionResult Create()
+        public IActionResult Create(int? businessId)
         {
-            return View();
+            LoanAppModel model = new LoanAppModel();
+            model.BusinessId = businessId.HasValue ? businessId.Value : 0;
+            model.DateSubmitted = DateTime.Today;
+            return View(model);
         }
 
         // POST: Business/Create
@@ -79,13 +103,13 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,PhoneNo,Email")] LoanAppModel model)
+        public async Task<IActionResult> Create(LoanAppModel model)
         {
-            var result = await client.PostAsJsonAsync<LoanAppModel>(apiController, model);
+            var result = await _httpClient.PostAsJsonAsync<LoanAppModel>(apiController, model);
 
             if (result.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","List");
             }
             else
             {
@@ -106,7 +130,7 @@ namespace LoanAppMVC.Controllers
 
             LoanAppModel model = new LoanAppModel();
 
-            var result = await client.GetAsync(apiController + "/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController + "/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<LoanAppModel>();
@@ -127,7 +151,7 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,PhoneNo,Email")] LoanAppModel model)
+        public async Task<IActionResult> Edit(int id, LoanAppModel model)
         {
             if (id != model.Id)
             {
@@ -141,49 +165,51 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await client.PutAsJsonAsync<LoanAppModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<LoanAppModel>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index","List");
                 }
             }
             return View(model);
         }
 
         // GET: Business/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int? businessId)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
+            return RedirectToAction("Index","List");
 
-            LoanAppModel model = new LoanAppModel();
+            //LoanAppModel model = new LoanAppModel();
 
-            var result = await client.GetAsync(apiController + "/" + id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<LoanAppModel>();
-                readTask.Wait();
+            //var result = await client.GetAsync(apiController + "/" + id.ToString());
+            //if (result.IsSuccessStatusCode)
+            //{
+            //    var readTask = result.Content.ReadAsAsync<LoanAppModel>();
+            //    readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
-            return View(model);
+            //    model = readTask.Result;
+            //}
+            //else //web api sent error response 
+            //{
+            //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+            //    return NotFound();
+            //}
+            //return View(model);
         }
 
         // POST: Business/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await client.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index");
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var result = await client.DeleteAsync(apiController + "/" + id.ToString());
+        //    return RedirectToAction("Index");
 
-        }
+        //}
     }
 }

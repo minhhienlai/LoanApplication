@@ -1,5 +1,5 @@
-﻿@model LoanAppMVC.Models.DemographicModel
-
+﻿@using SharedClassLibrary.Models
+@model DemographicModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -28,14 +28,14 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save and Next" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="List">Back to List</a>
 </div>
 
 @section Scripts {

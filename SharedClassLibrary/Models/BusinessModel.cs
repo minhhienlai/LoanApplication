@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LoanAppMVC.Models
+namespace SharedClassLibrary.Models
 {
     public class BusinessModel
     {
@@ -9,6 +10,10 @@ namespace LoanAppMVC.Models
         public string BusinessCode { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DemographicModel Owner { get; set; }
+
+        [ForeignKey("Owner")]
+        public int OwnerId { get; set; }
+        public DemographicModel? Owner { get; set; }
+        public List<LoanAppModel>? LoanApps { get; set; }
     }
 }

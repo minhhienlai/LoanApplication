@@ -1,5 +1,6 @@
-﻿using LoanAppMVC.Models;
-using SharedClassLibrary.Data;
+﻿using SharedClassLibrary.Data;
+using SharedClassLibrary.Models;
+using SharedClassLibrary.Repositories.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,64 +9,62 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.Repositories
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private DataContext context;
-        private GenericRepository<DemographicModel> demographicRepository;
-        private GenericRepository<BusinessModel> businessRepository;
-        private GenericRepository<LoanAppModel> loanAppRepository;
+        private DataContext _context;
+        private ListRepository _listRepository;
+        private GenericRepository<DemographicModel> _demographicRepository;
+        private GenericRepository<BusinessModel> _businessRepository;
+        private GenericRepository<LoanAppModel> _loanAppRepository;
 
-        public GenericRepository<DemographicModel> DemographicRepository
+        public UnitOfWork(DataContext context)
         {
-            get
-            {
-
-                if (this.demographicRepository == null)
-                {
-                    this.demographicRepository = new GenericRepository<DemographicModel>(context);
-                }
-                return demographicRepository;
-            }
+            _context = context;
         }
-        public GenericRepository<BusinessModel> BusinessRepository
-        {
-            get
-            {
 
-                if (this.businessRepository == null)
-                {
-                    this.businessRepository = new GenericRepository<BusinessModel>(context);
-                }
-                return businessRepository;
-            }
+        public IGenericRepository<DemographicModel> GetDemographicRepository()
+        {
+           if (this._demographicRepository == null) {
+                    this._demographicRepository = new DemographicRepository(_context);
+           }
+            return _demographicRepository;
         }
-        public GenericRepository<LoanAppModel> LoanAppRepository
-        {
-            get
-            {
 
-                if (this.loanAppRepository == null)
-                {
-                    this.loanAppRepository = new GenericRepository<LoanAppModel>(context);
-                }
-                return loanAppRepository;
+        public IGenericRepository<BusinessModel> GetBusinessRepository()
+        {
+            if (this._businessRepository == null) {
+                this._businessRepository = new BusinessRepository(_context);
             }
+            return _businessRepository;
+        }
+
+        public IGenericRepository<LoanAppModel> GetLoanAppRepository()
+        {
+            if (this._loanAppRepository == null) {
+                this._loanAppRepository = new LoanAppRepository(_context);
+            }
+            return _loanAppRepository;
+        }
+        public IListRepository GetListRepository()
+        {
+            if (this._listRepository == null) {
+                this._listRepository = new ListRepository(_context);
+            }
+            return _listRepository;
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
+            if (!this.disposed) {
+                if (disposing) {
+                    _context.Dispose();
                 }
             }
             this.disposed = true;
@@ -76,5 +75,7 @@ namespace SharedClassLibrary.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+
     }
 }

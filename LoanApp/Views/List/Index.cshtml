@@ -1,0 +1,112 @@
+﻿@using LoanAppMVC.Models
+@model SearchResultViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Loan Application list</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Search" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <label class="control-label">Applicant name</label>
+                <input type="text" name="app" value="@Model.app"  />
+           </div> <br/>
+            <div class="form-group">
+                <label class="control-label">Business code</label>
+                <input type="text" name="bcode"  value="@Model.bcode"/>
+            
+                <label class="control-label">Business name</label>
+                <input type="text" name="bname" value="@Model.bname" />
+            </div> <br/>
+            <div class="form-group">
+                <label class="control-label">Credit score from</label>
+                <input type="number" name="MinScore" value="@Model.MinScore" />
+                <label class="control-label">To</label>
+                <input type="number" name="MaxScore" value="@Model.MaxScore"/>
+            </div> <br/>
+            <div class="form-group">
+                <label class="control-label">Amount from</label>
+                <input type="number" name="MinAmount" value="@Model.MinAmount" />
+                <label class="control-label">To</label>
+                <input type="number" name="MaxAmount" value="@Model.MaxAmount" />
+            </div> <br/>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <a asp-action="Index" asp-controller="List" class="btn btn-primary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<p>
+    <a asp-action="Create" asp-controller="Demographic" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                DemographicName
+            </th>
+            <th>
+                PhoneNo
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                BusinessCode
+            </th>
+            <th>
+               BusinessName
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                CreditScore
+            </th>
+            <th>
+                RiskRate
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.searchResult) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DemographicName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusinessCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusinessName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreditScore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RiskRate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="Demographic" asp-route-id="@item.DemographicId">Edit</a> |
+                <a asp-action="Delete" asp-controller="LoanApp" asp-route-id="@item.LoanApplicationId" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

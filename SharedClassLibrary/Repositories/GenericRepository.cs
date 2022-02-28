@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
+using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories.Interface;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace SharedClassLibrary.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private DataContext _context;
-        private DbSet<T> table;
+        protected DataContext _context;
+        protected DbSet<T> table;
         public GenericRepository(DataContext _context)
         {
             this._context = _context;
@@ -29,20 +30,35 @@ namespace SharedClassLibrary.Repositories
         public void Insert(T obj)
         {
             table.Add(obj);
+            Save();
         }
-        public void Update(T obj)
+        public bool Update(T obj)
         {
-            table.Attach(obj);
-            _context.Entry(obj).State = EntityState.Modified;
-        }
+            try {
+                table.Attach(obj);
+                _context.Entry(obj).State = EntityState.Modified;
+                Save();
+                return true;
+            }
+            catch (Exception ex){
+                return false;
+        } }
+
         public void Delete(object id)
         {
             T objToDelete = table.Find(id);
-            table.Remove(objToDelete);
+            if (objToDelete != null) {
+                table.Remove(objToDelete);
+                Save();
+            }
         }
         public void Save()
         {
             _context.SaveChanges();
+        }
+        public virtual IEnumerable<T> GetByParentId(int id)
+        {
+            return null;
         }
     }
 }

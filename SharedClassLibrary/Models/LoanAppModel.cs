@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LoanAppMVC.Models
+namespace SharedClassLibrary.Models
 {
     public class LoanAppModel
     {
@@ -15,12 +16,26 @@ namespace LoanAppMVC.Models
         public double RiskRate { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime DateSubmitted { get; set; }
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DateSubmitted {
+            get;set;
+        }
+            [DataType(DataType.Date)]
         public DateTime? DateProcessed { get; set; }
         public int Status { get; set; }
-        public BusinessModel Business { get; set; }
+
+        [ForeignKey("Business")]
+        public int BusinessId { get; set; }
+        public BusinessModel? Business { get; set; }
+
+        public LoanAppModel()
+        {
+            Random r = new Random();
+            APRPercent = r.Next(4, 12);
+            CreditScore = r.Next(600,750);
+            LatePaymentRate = r.Next(0,100);
+            TotalDebt = r.Next(25000,1000000);
+
+            RiskRate = Math.Round(((TotalDebt / CreditScore - 33)/17+ LatePaymentRate)/2);
+        }
     }
 }

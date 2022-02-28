@@ -3,29 +3,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LoanAppMVC.Models;
+using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Controllers
 {
     public class DemographicController : Controller
     {
-        static HttpClient client = new HttpClient();
+        private readonly IHttpClientService _httpClient;
         string apiController = "Demographic";
+        //string nextController = "Business";
 
-        public DemographicController()
+        public DemographicController(IConfiguration configuration, IHttpClientService httpClient)
         {
-            client.BaseAddress = new Uri("http://localhost:5033");
+            _httpClient = httpClient;
         }
 
         // GET: Demographic
         public async Task<IActionResult> Index()
         {
+            
             IList<DemographicModel> models = new List<DemographicModel>();
 
-            var result = await client.GetAsync(apiController);
+            var result = await _httpClient.GetAsync(apiController);
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<IList<DemographicModel>>();
@@ -41,31 +44,31 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Demographic/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            DemographicModel model = new DemographicModel();
+        //    DemographicModel model = new DemographicModel();
 
-            var result = await client.GetAsync(apiController+"/"+id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<DemographicModel>();
-                readTask.Wait();
+        //    var result = await client.GetAsync(apiController+"/"+id.ToString());
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<DemographicModel>();
+        //        readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
+        //        model = readTask.Result;
+        //    }
+        //    else //web api sent error response 
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        //        return NotFound();
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         // GET: Demographic/Create
         public IActionResult Create()
@@ -80,11 +83,12 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
         {
-                var result = await client.PostAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PostAsJsonAsync<DemographicModel>(apiController, model);
 
                 if (result.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    int newId = result.Content.ReadAsAsync<int>().Result;
+                    return RedirectToAction("Create", "Business", new { ownerId = newId});
                 }
                 else
                 {
@@ -105,7 +109,7 @@ namespace LoanAppMVC.Controllers
 
             DemographicModel model = new DemographicModel();
 
-            var result = await client.GetAsync(apiController+"/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController+"/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<DemographicModel>();
@@ -128,6 +132,7 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
         {
+            int oid=0;
             if (id != model.Id)
             {
                 return NotFound();
@@ -140,12 +145,14 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await client.PutAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<DemographicModel>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    oid = result.Content.ReadAsAsync<int>().Result;
+                    return RedirectToAction("List","Business", new { ownerId= oid });
                 }
             }
+            ViewData["OwnerId"] = oid;
             return View(model);
         }
 
@@ -156,33 +163,35 @@ namespace LoanAppMVC.Controllers
             {
                 return NotFound();
             }
+            var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
+            return RedirectToAction("Index","List");
 
-            DemographicModel model = new DemographicModel();
+            //DemographicModel model = new DemographicModel();
 
-            var result = await client.GetAsync(apiController+"/" + id.ToString());
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<DemographicModel>();
-                readTask.Wait();
+            //var result = await client.GetAsync(apiController + "/" + id.ToString());
+            //if (result.IsSuccessStatusCode)
+            //{
+            //    var readTask = result.Content.ReadAsAsync<DemographicModel>();
+            //    readTask.Wait();
 
-                model = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                return NotFound();
-            }
-            return View(model);
+            //    model = readTask.Result;
+            //}
+            //else //web api sent error response 
+            //{
+            //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+            //    return NotFound();
+            //}
+            //return View(model);
         }
 
         // POST: Demographic/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await client.DeleteAsync(apiController+"/" + id.ToString());
-            return RedirectToAction("Index");
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var result = await client.DeleteAsync(apiController+"/" + id.ToString());
+        //    return RedirectToAction("Index");
 
-        }
+        //}
     }
 }
