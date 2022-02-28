@@ -11,7 +11,7 @@ namespace LoanAppMVC.Controllers
     {
         private readonly IHttpClientService _httpClient;
         string apiController = "List";
-        const int PAGE_SIZE = 50;
+        const int PAGE_SIZE = 20;
 
         public ListController(IConfiguration configuration, IHttpClientService httpClient)
         {
