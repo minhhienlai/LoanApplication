@@ -33,9 +33,10 @@
                 <input type="number" name="MinAmount" value="@Model.MinAmount" />
                 <label class="control-label">To</label>
                 <input type="number" name="MaxAmount" value="@Model.MaxAmount" />
-            </div>
+            </div> <br/>
             <div class="form-group">
                 <input type="submit" value="Search" class="btn btn-primary" />
+                <a asp-action="Index" asp-controller="List" class="btn btn-primary">Reset</a>
             </div>
         </form>
     </div>
@@ -43,7 +44,6 @@
 <br/>
 <p>
     <a asp-action="Create" asp-controller="Demographic" class="btn btn-primary">Create New</a>
-    <a asp-action="Index" asp-controller="List" class="btn btn-primary">Reset</a>
 </p>
 <table class="table">
     <thead>

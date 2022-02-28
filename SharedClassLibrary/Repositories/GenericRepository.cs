@@ -27,10 +27,6 @@ namespace SharedClassLibrary.Repositories
         {
             return table.Find(id);
         }
-        public virtual IEnumerable<T> GetByParentId(int id)
-        {
-            return null;
-        }
         public void Insert(T obj)
         {
             table.Add(obj);
@@ -59,6 +55,10 @@ namespace SharedClassLibrary.Repositories
         public void Save()
         {
             _context.SaveChanges();
+        }
+        public virtual IEnumerable<T> GetByParentId(int id)
+        {
+            return null;
         }
     }
 }

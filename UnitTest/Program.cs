@@ -11,7 +11,8 @@ namespace UnitTest
         {
             var unitOfWork = new UnitOfWorkTest();
             unitOfWork.InitUnitOfWork();
-            unitOfWork.RunWorks();
+            unitOfWork.SeedData();
+            //unitOfWork.RunWorks();
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories;
+using SharedClassLibrary.Repositories.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,30 +13,17 @@ namespace LoanAppWebAPI.Controllers
     [ApiController]
     public class BusinessController : ControllerBase
     {
-        private UnitOfWork _unitOfWork = new UnitOfWork();
-        public BusinessController()
+        private IUnitOfWork _unitOfWork;
+        public BusinessController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = InitRepository();
-        }
-        private UnitOfWork InitRepository()
-        {
-            DataContext dataContext;
-            string connection = @"Server=.;Database=LoanApp;Trusted_Connection=True;MultipleActiveResultSets=true";
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-            builder.UseSqlServer(connection);
-            dataContext = new DataContext(builder.Options);
-            dataContext.RegisterModels = new List<Action<ModelBuilder>>();
-            dataContext.RegisterModels.Add(d => d.Entity<BusinessModel>().ToTable("Businesses"));
-            UnitOfWork unitOfWork = new UnitOfWork();
-            unitOfWork.context = dataContext;
-            return unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: api/<BusinessController>
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<BusinessModel> results = _unitOfWork.BusinessRepository.GetAll();
+            IEnumerable<BusinessModel> results = _unitOfWork.GetBusinessRepository().GetAll();
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
@@ -44,7 +32,7 @@ namespace LoanAppWebAPI.Controllers
         [Route("GetByDemo/{id}")]
         public IActionResult GetByDemographicId(int id)
         {
-            IEnumerable<BusinessModel> results = _unitOfWork.BusinessRepository.GetByParentId(id);
+            IEnumerable<BusinessModel> results = _unitOfWork.GetBusinessRepository().GetByParentId(id);
             if (results == null) return NotFound();
             return Ok(results);
         }
@@ -53,7 +41,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            BusinessModel results = _unitOfWork.BusinessRepository.GetById(id);
+            BusinessModel results = _unitOfWork.GetBusinessRepository().GetById(id);
             if (results == null) return NotFound();
             return Ok(results);
         }
@@ -65,7 +53,7 @@ namespace LoanAppWebAPI.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-            _unitOfWork.BusinessRepository.Insert(value);
+            _unitOfWork.GetBusinessRepository().Insert(value);
             _unitOfWork.Save();
             return Ok(value.Id);
         }
@@ -80,7 +68,7 @@ namespace LoanAppWebAPI.Controllers
             //var isExist = _unitOfWork.BusinessRepository.GetById(value.Id);
             //if (isExist == null) return NotFound();
 
-            if (_unitOfWork.BusinessRepository.Update(value))
+            if (_unitOfWork.GetBusinessRepository().Update(value))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);
@@ -92,7 +80,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _unitOfWork.BusinessRepository.Delete(id);
+            _unitOfWork.GetBusinessRepository().Delete(id);
             _unitOfWork.Save();
 
             return Ok();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories;
+using SharedClassLibrary.Repositories.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,29 +13,16 @@ namespace LoanAppWebAPI.Controllers
     [ApiController]
     public class ListController : ControllerBase
     {
-        private UnitOfWork _unitOfWork = new UnitOfWork();
-        public ListController()
+        private IUnitOfWork _unitOfWork;
+        public ListController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = InitRepository();
-        }
-        private UnitOfWork InitRepository()
-        {
-            DataContext dataContext;
-            string connection = @"Server=.;Database=LoanApp;Trusted_Connection=True;MultipleActiveResultSets=true";
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-            builder.UseSqlServer(connection);
-            dataContext = new DataContext(builder.Options);
-            dataContext.RegisterModels = new List<Action<ModelBuilder>>();
-            dataContext.RegisterModels.Add(l => l.Entity<ListModel>().ToTable("Businesses"));
-            UnitOfWork unitOfWork = new UnitOfWork();
-            unitOfWork.context = dataContext;
-            return unitOfWork;
+            _unitOfWork = unitOfWork;
         }
         // GET: api/<ListController>
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<ListModel> results = _unitOfWork.ListRepository.GetList();
+            IEnumerable<ListModel> results = _unitOfWork.GetListRepository().GetList();
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
@@ -44,18 +32,18 @@ namespace LoanAppWebAPI.Controllers
         public IActionResult Get(string? app, string? bcode, string? bname,
             int? MinScore, int? MaxScore, int? MinAmount, int? MaxAmount)
         {
-            IEnumerable<ListModel> results = _unitOfWork.ListRepository.Search(
+            IEnumerable<ListModel> results = _unitOfWork.GetListRepository().Search(
                 app, bcode, bname, MinScore,  MaxScore,  MinAmount,  MaxAmount);
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
 
         // GET api/<ListController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
        
     }

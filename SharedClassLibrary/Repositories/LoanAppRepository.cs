@@ -1,5 +1,6 @@
 ﻿using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
+using SharedClassLibrary.Repositories.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;

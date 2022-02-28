@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
+using SharedClassLibrary.Repositories.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace SharedClassLibrary.Repositories
 {
-    public class ListRepository {
+    public class ListRepository: IListRepository
+    {
         protected DataContext _context;
-        protected DbSet<DemographicModel> demographicTable;
-        protected DbSet<BusinessModel> businessTable;
-        protected DbSet<LoanAppModel> loanAppTable;
+        //protected DbSet<DemographicModel> demographicTable;
+        //protected DbSet<BusinessModel> businessTable;
+        //protected DbSet<LoanAppModel> loanAppTable;
         public ListRepository(DataContext context)
         {
             this._context = context;

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="6.13.12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SharedClassLibrary\SharedClassLibrary.csproj" />
   </ItemGroup>
 

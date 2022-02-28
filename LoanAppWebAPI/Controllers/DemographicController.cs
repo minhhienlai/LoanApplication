@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories;
+using SharedClassLibrary.Repositories.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,29 +13,30 @@ namespace LoanAppWebAPI.Controllers
     [ApiController]
     public class DemographicController : ControllerBase
     {
-        private UnitOfWork _unitOfWork;
-        public DemographicController()
+        private IUnitOfWork _unitOfWork;
+        public DemographicController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = InitRepository();
+            _unitOfWork = unitOfWork;
+            //_unitOfWork = InitRepository();
         }
-        private UnitOfWork InitRepository()
-        {
-            DataContext dataContext;
-            string connection = @"Server=.;Database=LoanApp;Trusted_Connection=True;MultipleActiveResultSets=true";
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-            builder.UseSqlServer(connection);
-            dataContext = new DataContext(builder.Options);
-            dataContext.RegisterModels = new List<Action<ModelBuilder>>();
-            dataContext.RegisterModels.Add(d => d.Entity<DemographicModel>().ToTable("Demographics"));
-            UnitOfWork unitOfWork = new UnitOfWork();
-            unitOfWork.context = dataContext;
-            return unitOfWork;
-        }
+        //private UnitOfWork InitRepository()
+        //{
+        //    DataContext dataContext;
+        //    string connection = @"Server=.;Database=LoanApp;Trusted_Connection=True;MultipleActiveResultSets=true";
+        //    DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+        //    builder.UseSqlServer(connection);
+        //    dataContext = new DataContext(builder.Options);
+        //    dataContext.RegisterModels = new List<Action<ModelBuilder>>();
+        //    dataContext.RegisterModels.Add(d => d.Entity<DemographicModel>().ToTable("Demographics"));
+        //    UnitOfWork unitOfWork = new UnitOfWork();
+        //    unitOfWork.context = dataContext;
+        //    return unitOfWork;
+        //}
         // GET: api/<DemographicController>
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<DemographicModel> results = _unitOfWork.DemographicRepository.GetAll();
+            IEnumerable<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetAll();
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
@@ -43,7 +45,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            DemographicModel results = _unitOfWork.DemographicRepository.GetById(id);
+            DemographicModel results = _unitOfWork.GetDemographicRepository().GetById(id);
             if (results == null) return NotFound();
             return Ok(results);
         }
@@ -54,7 +56,7 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-            _unitOfWork.DemographicRepository.Insert(value);
+            _unitOfWork.GetDemographicRepository().Insert(value);
             _unitOfWork.Save();
             return Ok(value.Id);
         }
@@ -69,7 +71,7 @@ namespace LoanAppWebAPI.Controllers
             //var currentObj = _unitOfWork.DemographicRepository.GetById(value.Id);
             //if (currentObj == null) return NotFound();
 
-            if (_unitOfWork.DemographicRepository.Update(value))
+            if (_unitOfWork.GetDemographicRepository().Update(value))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);
@@ -81,7 +83,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _unitOfWork.DemographicRepository.Delete(id);
+            _unitOfWork.GetDemographicRepository().Delete(id);
             _unitOfWork.Save();
 
             return Ok();

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,24 +13,20 @@ namespace LoanAppMVC.Controllers
 {
     public class BusinessController : Controller
     {
-        static HttpClient client = new HttpClient();
+        private readonly IHttpClientService _httpClient;
         string apiController = "Business";
         //string nextController = "LoanApp";
 
-        public BusinessController(IConfiguration configuration)
+        public BusinessController(IConfiguration configuration, IHttpClientService httpClient)
         {
-            if (client.BaseAddress == null)
-            {
-                client.BaseAddress = new Uri(configuration.GetValue<string>("baseApiUri"));
-
-            }
+            _httpClient = httpClient;
         }
         // GET: Business
         public async Task<IActionResult> Index()
         {
             IList<BusinessModel> models = new List<BusinessModel>();
 
-            var result = await client.GetAsync(apiController);
+            var result = await _httpClient.GetAsync(apiController);
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<IList<BusinessModel>>();
@@ -48,7 +45,7 @@ namespace LoanAppMVC.Controllers
         {
             IList<BusinessModel> models = new List<BusinessModel>();
 
-            var result = await client.GetAsync(apiController+"/GetByDemo/"+ ownerid.ToString());
+            var result = await _httpClient.GetAsync(apiController+"/GetByDemo/"+ ownerid.ToString());
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<IList<BusinessModel>>();
@@ -107,7 +104,7 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BusinessModel model)
         {
-            var result = await client.PostAsJsonAsync<BusinessModel>(apiController, model);
+            var result = await _httpClient.PostAsJsonAsync<BusinessModel>(apiController, model);
 
             if (result.IsSuccessStatusCode)
             {
@@ -133,7 +130,7 @@ namespace LoanAppMVC.Controllers
 
             BusinessModel model = new BusinessModel();
 
-            var result = await client.GetAsync(apiController + "/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController + "/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<BusinessModel>();
@@ -168,7 +165,7 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await client.PutAsJsonAsync<BusinessModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<BusinessModel>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
                     int oid = result.Content.ReadAsAsync<int>().Result;
@@ -185,7 +182,8 @@ namespace LoanAppMVC.Controllers
             {
                 return NotFound();
             }
-            var result = await client.DeleteAsync(apiController + "/" + id.ToString());
+            string request = apiController + "/" + id.ToString();
+            var result = await _httpClient.DeleteAsync(request);
             return RedirectToAction("List","Business", new {ownerId = ownerId});
 
             //BusinessModel model = new BusinessModel();

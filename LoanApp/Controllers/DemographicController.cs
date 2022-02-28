@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +13,13 @@ namespace LoanAppMVC.Controllers
 {
     public class DemographicController : Controller
     {
-        static HttpClient client = new HttpClient();
+        private readonly IHttpClientService _httpClient;
         string apiController = "Demographic";
         //string nextController = "Business";
 
-        public DemographicController(IConfiguration configuration)
+        public DemographicController(IConfiguration configuration, IHttpClientService httpClient)
         {
-            if (client.BaseAddress == null)
-            {
-                client.BaseAddress = new Uri(configuration.GetValue<string>("baseApiUri"));
-            }
+            _httpClient = httpClient;
         }
 
         // GET: Demographic
@@ -30,7 +28,7 @@ namespace LoanAppMVC.Controllers
             
             IList<DemographicModel> models = new List<DemographicModel>();
 
-            var result = await client.GetAsync(apiController);
+            var result = await _httpClient.GetAsync(apiController);
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<IList<DemographicModel>>();
@@ -85,7 +83,7 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
         {
-                var result = await client.PostAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PostAsJsonAsync<DemographicModel>(apiController, model);
 
                 if (result.IsSuccessStatusCode)
                 {
@@ -111,7 +109,7 @@ namespace LoanAppMVC.Controllers
 
             DemographicModel model = new DemographicModel();
 
-            var result = await client.GetAsync(apiController+"/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController+"/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<DemographicModel>();
@@ -147,7 +145,7 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await client.PutAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<DemographicModel>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
                     oid = result.Content.ReadAsAsync<int>().Result;
@@ -165,7 +163,7 @@ namespace LoanAppMVC.Controllers
             {
                 return NotFound();
             }
-            var result = await client.DeleteAsync(apiController + "/" + id.ToString());
+            var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
             return RedirectToAction("Index","List");
 
             //DemographicModel model = new DemographicModel();
