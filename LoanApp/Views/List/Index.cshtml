@@ -4,12 +4,18 @@
 @{
     ViewData["Title"] = "Index";
 }
+@{
+    var prevDisabled = !Model.searchResult.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.searchResult.HasNextPage ? "disabled" : "";
+    var maxAmountVal = Model.MaxAmount == 0 ? "" : Model.MaxAmount.ToString();
+    var maxScoreVal = Model.MaxScore == 0 ? "" : Model.MaxScore.ToString();
+}
 
 <h1>Loan Application list</h1>
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Search" method="get">
+        <form asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div>
                 <label class="control-label">Applicant name</label>
@@ -26,13 +32,13 @@
                 <label class="control-label">Credit score from</label>
                 <input type="number" name="MinScore" value="@Model.MinScore" />
                 <label class="control-label">To</label>
-                <input type="number" name="MaxScore" value="@Model.MaxScore"/>
+                <input type="number" name="MaxScore" value="@maxScoreVal" />
             </div> <br/>
             <div class="form-group">
                 <label class="control-label">Amount from</label>
                 <input type="number" name="MinAmount" value="@Model.MinAmount" />
                 <label class="control-label">To</label>
-                <input type="number" name="MaxAmount" value="@Model.MaxAmount" />
+                <input type="number" name="MaxAmount" value="@maxAmountVal" />
             </div> <br/>
             <div class="form-group">
                 <input type="submit" value="Search" class="btn btn-primary" />
@@ -49,7 +55,7 @@
     <thead>
         <tr>
             <th>
-                DemographicName
+                Applicant name
             </th>
             <th>
                 PhoneNo
@@ -110,3 +116,53 @@
 }
     </tbody>
 </table>
+
+<a asp-action="Index"
+   asp-route-pageNumber="1"
+   asp-route-app=@Model.app
+   asp-route-bcode=@Model.bcode
+   asp-route-bname=@Model.bname
+   asp-route-MinScore=@Model.MinScore
+   asp-route-MaxScore=@Model.MaxScore
+   asp-route-MinAmount=@Model.MinAmount
+   asp-route-MaxAmount=@Model.MaxAmount
+   class="btn btn-default">
+    First
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.searchResult.PageIndex - 1)"
+   asp-route-app=@Model.app
+   asp-route-bcode=@Model.bcode
+   asp-route-bname=@Model.bname
+   asp-route-MinScore=@Model.MinScore
+   asp-route-MaxScore=@Model.MaxScore
+   asp-route-MinAmount=@Model.MinAmount
+   asp-route-MaxAmount=@Model.MaxAmount
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.searchResult.PageIndex + 1)"
+   asp-route-app=@Model.app
+   asp-route-bcode=@Model.bcode
+   asp-route-bname=@Model.bname
+   asp-route-MinScore=@Model.MinScore
+   asp-route-MaxScore=@Model.MaxScore
+   asp-route-MinAmount=@Model.MinAmount
+   asp-route-MaxAmount=@Model.MaxAmount
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.searchResult.TotalPages)"
+   asp-route-app=@Model.app
+   asp-route-bcode=@Model.bcode
+   asp-route-bname=@Model.bname
+   asp-route-MinScore=@Model.MinScore
+   asp-route-MaxScore=@Model.MaxScore
+   asp-route-MinAmount=@Model.MinAmount
+   asp-route-MaxAmount=@Model.MaxAmount
+   class="btn btn-default">
+    Last
+</a>
+<span>Page @Model.searchResult.PageIndex / @Model.searchResult.TotalPages</span>

@@ -40,11 +40,11 @@ namespace UnitTest
         public void SeedData()
         {
             try { 
-                dataContext.AddRange(GenerateDemographicData(20));
+                dataContext.AddRange(GenerateDemographicData(1000));
                 dataContext.SaveChanges();
-                dataContext.AddRange(GenerateBusinessData(20));
+                dataContext.AddRange(GenerateBusinessData(1000));
                 dataContext.SaveChanges();
-                dataContext.AddRange(GenerateLoanAppData(20));
+                dataContext.AddRange(GenerateLoanAppData(1000));
                 dataContext.SaveChanges();
             }
             catch (Exception exception)

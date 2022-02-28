@@ -2,6 +2,7 @@
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SharedClassLibrary;
 using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Controllers
@@ -10,47 +11,56 @@ namespace LoanAppMVC.Controllers
     {
         private readonly IHttpClientService _httpClient;
         string apiController = "List";
+        const int PAGE_SIZE = 20;
 
         public ListController(IConfiguration configuration, IHttpClientService httpClient)
         {
             _httpClient = httpClient;
         }
         // GET: ListController
-        public async Task<IActionResult> Index()
-        {
-            IList<ListModel> models = new List<ListModel>();
+        //public async Task<IActionResult> Index(int? pageNumber)
+        //{
+        //    IList<ListModel> searchResult = new List<ListModel>();
+        //    PaginatedList<ListModel> models = new PaginatedList<ListModel>();
 
-            var result = await _httpClient.GetAsync(apiController);
-            if (result.IsSuccessStatusCode)
-            {
-                var readTask = result.Content.ReadAsAsync<IList<ListModel>>();
-                readTask.Wait();
+        //    var result = await _httpClient.GetAsync(apiController);
+        //    if (result.IsSuccessStatusCode)
+        //    {
+        //        var readTask = result.Content.ReadAsAsync<IList<ListModel>>();
+        //        readTask.Wait();
 
-                models = readTask.Result;
-            }
-            else //web api sent error response 
-            {
-                ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-            }
-            SearchResultViewModel model = new SearchResultViewModel()
-            {
-                searchResult = models
-            };
-            return View(model);
-        }
+        //        searchResult = readTask.Result;
 
-        public async Task<IActionResult> Search(string app,string bcode,string bname,
+        //        models = PaginatedList<ListModel>.Create(searchResult, pageNumber ?? 1, PAGE_SIZE);
+        //    }
+        //    else //web api sent error response 
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        //    }
+        //    SearchResultViewModel model = new SearchResultViewModel()
+        //    {
+        //        searchResult = models
+        //    };
+        //    return View(model);
+        //}
+
+        public async Task<IActionResult> Index(int? pageNumber,
+            string app,string bcode,string bname,
             int MinScore,int MaxScore, int MinAmount, int MaxAmount)
         {
-            IList<ListModel> models = new List<ListModel>();
-            string query = apiController + "/Search?";
-             if (app != null && app.Length > 0) query += "app=" + app+"&";
-             if (bcode != null && bcode.Length > 0) query += "bcode=" + bcode + "&";
-             if (bname != null && bname.Length > 0) query += "bname=" + bname + "&";
-             if (MinScore > 0) query += "MinScore=" + MinScore + "&";
-             if (MaxScore > 0) query += "MaxScore=" + MaxScore + "&";
-             if (MinAmount > 0) query += "MinAmount=" + MinAmount + "&";
-             if (MaxAmount > 0) query += "MaxAmount=" + MaxAmount;
+            IList<ListModel> searchResult = new List<ListModel>();
+            PaginatedList<ListModel> models = new PaginatedList<ListModel>();
+
+            string filter = "";
+             if (app != null && app.Length > 0) filter += "app=" + app+"&";
+             if (bcode != null && bcode.Length > 0) filter += "bcode=" + bcode + "&";
+             if (bname != null && bname.Length > 0) filter += "bname=" + bname + "&";
+             if (MinScore > 0) filter += "MinScore=" + MinScore + "&";
+             if (MaxScore > 0) filter += "MaxScore=" + MaxScore + "&";
+             if (MinAmount > 0) filter += "MinAmount=" + MinAmount + "&";
+             if (MaxAmount > 0) filter += "MaxAmount=" + MaxAmount;
+
+            string query = apiController + ((filter.Length> 0) ? "/Search?" + filter: "");
 
             var result = await _httpClient.GetAsync(query);
             if (result.IsSuccessStatusCode)
@@ -58,7 +68,9 @@ namespace LoanAppMVC.Controllers
                 var readTask = result.Content.ReadAsAsync<IList<ListModel>>();
                 readTask.Wait();
 
-                models = readTask.Result;
+                searchResult = readTask.Result;
+                
+                models = PaginatedList<ListModel>.Create(searchResult, pageNumber ?? 1, PAGE_SIZE);
             }
             else if ((int)result.StatusCode == StatusCodes.Status404NotFound)
             {

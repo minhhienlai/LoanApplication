@@ -5,6 +5,7 @@ using SharedClassLibrary.Repositories;
 using SharedClassLibrary.Repositories.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
+string connectionString = builder.Configuration.GetConnectionString("LoanAppMVCContext");
 
 // Add services to the container.
 builder.Services.AddDbContext<DataContext>(options =>
@@ -34,5 +35,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Task.Run(() =>
+{
+    DbContextOptionsBuilder builder1 = new DbContextOptionsBuilder();
+    builder1.UseSqlServer(connectionString);
+    var unitOfWork = new UnitOfWork(new DataContext(builder1.Options));
+    unitOfWork.SeedData();
+});
 
 app.Run();
