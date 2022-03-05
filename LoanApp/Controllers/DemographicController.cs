@@ -15,7 +15,6 @@ namespace LoanAppMVC.Controllers
     {
         private readonly IHttpClientService _httpClient;
         string apiController = "Demographic";
-        //string nextController = "Business";
 
         public DemographicController(IConfiguration configuration, IHttpClientService httpClient)
         {
@@ -43,34 +42,6 @@ namespace LoanAppMVC.Controllers
             return View(models);
         }
 
-        // GET: Demographic/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    DemographicModel model = new DemographicModel();
-
-        //    var result = await client.GetAsync(apiController+"/"+id.ToString());
-        //    if (result.IsSuccessStatusCode)
-        //    {
-        //        var readTask = result.Content.ReadAsAsync<DemographicModel>();
-        //        readTask.Wait();
-
-        //        model = readTask.Result;
-        //    }
-        //    else //web api sent error response 
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-        //        return NotFound();
-        //    }
-
-        //    return View(model);
-        //}
-
-        // GET: Demographic/Create
         public IActionResult Create()
         {
             return View();
@@ -165,33 +136,6 @@ namespace LoanAppMVC.Controllers
             }
             var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
             return RedirectToAction("Index","List");
-
-            //DemographicModel model = new DemographicModel();
-
-            //var result = await client.GetAsync(apiController + "/" + id.ToString());
-            //if (result.IsSuccessStatusCode)
-            //{
-            //    var readTask = result.Content.ReadAsAsync<DemographicModel>();
-            //    readTask.Wait();
-
-            //    model = readTask.Result;
-            //}
-            //else //web api sent error response 
-            //{
-            //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-            //    return NotFound();
-            //}
-            //return View(model);
         }
-
-        // POST: Demographic/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var result = await client.DeleteAsync(apiController+"/" + id.ToString());
-        //    return RedirectToAction("Index");
-
-        //}
     }
 }

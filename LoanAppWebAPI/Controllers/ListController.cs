@@ -37,14 +37,5 @@ namespace LoanAppWebAPI.Controllers
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
-
-        // GET api/<ListController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-       
     }
 }

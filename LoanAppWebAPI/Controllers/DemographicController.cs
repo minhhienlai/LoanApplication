@@ -19,19 +19,7 @@ namespace LoanAppWebAPI.Controllers
             _unitOfWork = unitOfWork;
             //_unitOfWork = InitRepository();
         }
-        //private UnitOfWork InitRepository()
-        //{
-        //    DataContext dataContext;
-        //    string connection = @"Server=.;Database=LoanApp;Trusted_Connection=True;MultipleActiveResultSets=true";
-        //    DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-        //    builder.UseSqlServer(connection);
-        //    dataContext = new DataContext(builder.Options);
-        //    dataContext.RegisterModels = new List<Action<ModelBuilder>>();
-        //    dataContext.RegisterModels.Add(d => d.Entity<DemographicModel>().ToTable("Demographics"));
-        //    UnitOfWork unitOfWork = new UnitOfWork();
-        //    unitOfWork.context = dataContext;
-        //    return unitOfWork;
-        //}
+     
         // GET: api/<DemographicController>
         [HttpGet]
         public IActionResult Get()
@@ -67,9 +55,6 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-
-            //var currentObj = _unitOfWork.DemographicRepository.GetById(value.Id);
-            //if (currentObj == null) return NotFound();
 
             if (_unitOfWork.GetDemographicRepository().Update(value))
             {

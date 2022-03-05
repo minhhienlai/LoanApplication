@@ -65,9 +65,6 @@ namespace LoanAppWebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
 
-            //var isExist = _unitOfWork.BusinessRepository.GetById(value.Id);
-            //if (isExist == null) return NotFound();
-
             if (_unitOfWork.GetBusinessRepository().Update(value))
             {
                 _unitOfWork.Save();

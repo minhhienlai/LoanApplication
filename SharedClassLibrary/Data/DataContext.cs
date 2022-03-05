@@ -14,7 +14,6 @@ namespace SharedClassLibrary.Data
         {
         }
         public List<Action<ModelBuilder>> RegisterModels { get; set; }
-        //public DbSet<ListModel> List { get; set; }
         public DbSet<DemographicModel> Demographics { get; set; }
         public DbSet<BusinessModel> Businesses { get; set; }
         public DbSet<LoanAppModel> LoanApps { get; set; }

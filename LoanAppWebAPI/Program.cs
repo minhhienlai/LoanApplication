@@ -36,12 +36,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Task.Run(() =>
-{
-    DbContextOptionsBuilder builder1 = new DbContextOptionsBuilder();
-    builder1.UseSqlServer(connectionString);
-    var unitOfWork = new UnitOfWork(new DataContext(builder1.Options));
-    unitOfWork.SeedData();
-});
-
 app.Run();

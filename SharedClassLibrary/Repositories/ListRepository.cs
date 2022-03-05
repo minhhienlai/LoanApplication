@@ -13,9 +13,6 @@ namespace SharedClassLibrary.Repositories
     public class ListRepository: IListRepository
     {
         protected DataContext _context;
-        //protected DbSet<DemographicModel> demographicTable;
-        //protected DbSet<BusinessModel> businessTable;
-        //protected DbSet<LoanAppModel> loanAppTable;
         public ListRepository(DataContext context)
         {
             this._context = context;

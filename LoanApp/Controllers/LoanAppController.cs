@@ -62,34 +62,6 @@ namespace LoanAppMVC.Controllers
             return View("Index", models);
         }
 
-        // GET: Business/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    LoanAppModel model = new LoanAppModel();
-
-        //    var result = await client.GetAsync(apiController + "/" + id.ToString());
-        //    if (result.IsSuccessStatusCode)
-        //    {
-        //        var readTask = result.Content.ReadAsAsync<LoanAppModel>();
-        //        readTask.Wait();
-
-        //        model = readTask.Result;
-        //    }
-        //    else //web api sent error response 
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-        //        return NotFound();
-        //    }
-
-        //    return View(model);
-        //}
-
-        // GET: Business/Create
         public IActionResult Create(int? businessId)
         {
             LoanAppModel model = new LoanAppModel();
@@ -184,32 +156,6 @@ namespace LoanAppMVC.Controllers
             var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
             return RedirectToAction("Index","List");
 
-            //LoanAppModel model = new LoanAppModel();
-
-            //var result = await client.GetAsync(apiController + "/" + id.ToString());
-            //if (result.IsSuccessStatusCode)
-            //{
-            //    var readTask = result.Content.ReadAsAsync<LoanAppModel>();
-            //    readTask.Wait();
-
-            //    model = readTask.Result;
-            //}
-            //else //web api sent error response 
-            //{
-            //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-            //    return NotFound();
-            //}
-            //return View(model);
         }
-
-        // POST: Business/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var result = await client.DeleteAsync(apiController + "/" + id.ToString());
-        //    return RedirectToAction("Index");
-
-        //}
     }
 }
