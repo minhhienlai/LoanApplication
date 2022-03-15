@@ -98,7 +98,9 @@ namespace LoanAppWebAPI.Repositories
                 list.Add(new DemographicModel() {
                     Name = RandomString(4, 6),
                     PhoneNo = RandomNumber(10),
-                    Email = RandomString(6, 10) + "@gmail.com"
+                    Email = RandomString(6, 10) + "@gmail.com",
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = "SeedData"
                 });
             }
 
@@ -114,7 +116,9 @@ namespace LoanAppWebAPI.Repositories
                     BusinessCode = RandomString(8),
                     Name = RandomString(10, 20),
                     Description = RandomString(30),
-                    OwnerId = ownerList[random.Next(ownerList.Count)]
+                    OwnerId = ownerList[random.Next(ownerList.Count)],
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = "SeedData"
                 });
             }
 
@@ -137,7 +141,9 @@ namespace LoanAppWebAPI.Repositories
                     DateSubmitted = DateTime.Today.AddDays(random.Next(0, 500) * -1),
                     DateProcessed = DateTime.Today.AddDays(random.Next(0, 100) * -1),
                     Status = random.Next(0, 1),
-                    BusinessId = bList[random.Next(bList.Count)]
+                    BusinessId = bList[random.Next(bList.Count)],
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = "SeedData"
                 });
             }
 

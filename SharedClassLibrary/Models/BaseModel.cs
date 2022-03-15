@@ -6,10 +6,10 @@ namespace SharedClassLibrary.Models
     {
        // [NotMapped]
         //public abstract string TableName { get; }
-        public DateTime? CreatedAt { get; }
-        public string CreatedBy { get; }
-        public DateTime? ModifiedAt { get; }
-        public string ModifiedBy { get; }
+        public DateTime? CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? ModifiedAt { get; set; }
+        public string ModifiedBy { get; set; }
     }
 
 }
