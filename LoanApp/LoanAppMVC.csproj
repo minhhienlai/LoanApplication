@@ -8,17 +8,18 @@
 
   <ItemGroup>
     <Compile Remove="Data\**" />
+    <Compile Remove="Repositories\**" />
     <Content Remove="Data\**" />
+    <Content Remove="Repositories\**" />
     <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Repositories\**" />
     <None Remove="Data\**" />
+    <None Remove="Repositories\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\HomeController.cs" />
     <Compile Remove="Models\BusinessListViewModel.cs" />
-    <Compile Remove="Models\BusinessModel.cs" />
-    <Compile Remove="Models\DemographicModel.cs" />
-    <Compile Remove="Models\LoanAppModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SharedClassLibrary.Data;
-using SharedClassLibrary.Models;
-using SharedClassLibrary.Repositories;
-using SharedClassLibrary.Repositories.Interface;
+﻿using LoanAppWebAPI.Models;
+using LoanAppWebAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,14 +34,5 @@ namespace LoanAppWebAPI.Controllers
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
-
-        // GET api/<ListController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-       
     }
 }

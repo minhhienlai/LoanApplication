@@ -1,23 +1,21 @@
-﻿using SharedClassLibrary.Data;
+﻿using LoanAppWebAPI.Data;
+using LoanAppWebAPI.Models;
+using LoanAppWebAPI.Repositories.Interface;
+using SharedClassLibrary.Repositories;
 using SharedClassLibrary.Repositories.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SharedClassLibrary.Repositories
+namespace LoanAppWebAPI.Repositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private DataContext _context;
+        private APIDataContext _context;
         private ListRepository _listRepository;
         private GenericRepository<DemographicModel> _demographicRepository;
         private GenericRepository<BusinessModel> _businessRepository;
         private GenericRepository<LoanAppModel> _loanAppRepository;
         private static Random random = new Random();
 
-        public UnitOfWork(DataContext context)
+        public UnitOfWork(APIDataContext context)
         {
             _context = context;
         }

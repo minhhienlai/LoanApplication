@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SharedClassLibrary.Data;
-using SharedClassLibrary.Models;
-using SharedClassLibrary.Repositories;
-using SharedClassLibrary.Repositories.Interface;
+﻿using LoanAppWebAPI.Models;
+using LoanAppWebAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,19 +16,7 @@ namespace LoanAppWebAPI.Controllers
             _unitOfWork = unitOfWork;
             //_unitOfWork = InitRepository();
         }
-        //private UnitOfWork InitRepository()
-        //{
-        //    DataContext dataContext;
-        //    string connection = @"Server=.;Database=LoanApp;Trusted_Connection=True;MultipleActiveResultSets=true";
-        //    DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-        //    builder.UseSqlServer(connection);
-        //    dataContext = new DataContext(builder.Options);
-        //    dataContext.RegisterModels = new List<Action<ModelBuilder>>();
-        //    dataContext.RegisterModels.Add(d => d.Entity<DemographicModel>().ToTable("Demographics"));
-        //    UnitOfWork unitOfWork = new UnitOfWork();
-        //    unitOfWork.context = dataContext;
-        //    return unitOfWork;
-        //}
+     
         // GET: api/<DemographicController>
         [HttpGet]
         public IActionResult Get()
@@ -67,9 +52,6 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-
-            //var currentObj = _unitOfWork.DemographicRepository.GetById(value.Id);
-            //if (currentObj == null) return NotFound();
 
             if (_unitOfWork.GetDemographicRepository().Update(value))
             {
