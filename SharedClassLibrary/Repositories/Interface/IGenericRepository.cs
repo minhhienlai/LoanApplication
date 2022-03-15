@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharedClassLibrary.Models;
 
 namespace SharedClassLibrary.Repositories.Interface
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : BaseModel
     {
         public IEnumerable<T> GetAll();
         public T GetById(object id);

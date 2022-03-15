@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SharedClassLibrary.Data;
-using SharedClassLibrary.Models;
-using SharedClassLibrary.Repositories;
-using SharedClassLibrary.Repositories.Interface;
+﻿using LoanAppWebAPI.Models;
+using LoanAppWebAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,10 +62,6 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-
-            //var isExist = _unitOfWork.LoanAppRepository.GetById(value.Id);
-            //if (isExist == null) return NotFound();
-
             if (_unitOfWork.GetLoanAppRepository().Update(value))
             {
                 _unitOfWork.Save();

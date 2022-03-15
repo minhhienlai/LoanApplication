@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SharedClassLibrary.Models
+namespace LoanAppMVC.Models
 {
     public class DemographicModel
     {

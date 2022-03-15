@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using SharedClassLibrary.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LoanAppMVCContext"),b => b.MigrationsAssembly("LoanAppMVC")));

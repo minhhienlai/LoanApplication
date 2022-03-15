@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SharedClassLibrary.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SharedClassLibrary.Models
+namespace LoanAppWebAPI.Models
 {
-    public class BusinessModel
+    public class BusinessModel : BaseModel
     {
         [Key]
         public int Id { get; set; }

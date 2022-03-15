@@ -1,13 +1,14 @@
-﻿using System;
+﻿using SharedClassLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedClassLibrary.Models
+namespace LoanAppWebAPI.Models
 {
-    public class ListModel
+    public class ListModel : BaseModel
     {
         public int LoanApplicationId { get; set; }
         public int DemographicId { get; set; }

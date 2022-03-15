@@ -1,13 +1,7 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using LoanAppMVC.Models;
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Controllers
 {
@@ -15,8 +9,6 @@ namespace LoanAppMVC.Controllers
     {
         private readonly IHttpClientService _httpClient;
         string apiController = "Business";
-        //string nextController = "LoanApp";
-
         public BusinessController(IConfiguration configuration, IHttpClientService httpClient)
         {
             _httpClient = httpClient;
@@ -62,34 +54,6 @@ namespace LoanAppMVC.Controllers
                 //new BusinessListViewModel { modelList = models, OwnerId  = ownerid});
         }
 
-        //// GET: Business/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    BusinessModel model = new BusinessModel();
-
-        //    var result = await client.GetAsync(apiController + "/" + id.ToString());
-        //    if (result.IsSuccessStatusCode)
-        //    {
-        //        var readTask = result.Content.ReadAsAsync<BusinessModel>();
-        //        readTask.Wait();
-
-        //        model = readTask.Result;
-        //    }
-        //    else //web api sent error response 
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-        //        return NotFound();
-        //    }
-
-        //    return View(model);
-        //}
-
-        // GET: Business/Create
         public IActionResult Create(int? ownerId)
         {
             BusinessModel model = new BusinessModel();
@@ -185,33 +149,6 @@ namespace LoanAppMVC.Controllers
             string request = apiController + "/" + id.ToString();
             var result = await _httpClient.DeleteAsync(request);
             return RedirectToAction("List","Business", new {ownerId = ownerId});
-
-            //BusinessModel model = new BusinessModel();
-
-            //var result = await client.GetAsync(apiController + "/" + id.ToString());
-            //if (result.IsSuccessStatusCode)
-            //{
-            //    var readTask = result.Content.ReadAsAsync<BusinessModel>();
-            //    readTask.Wait();
-
-            //    model = readTask.Result;
-            //}
-            //else //web api sent error response 
-            //{
-            //    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-            //    return NotFound();
-            //}
-            //return View(model);
         }
-
-        // POST: Business/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var result = await client.DeleteAsync(apiController + "/" + id.ToString());
-        //    return RedirectToAction("Index");
-
-        //}
     }
 }

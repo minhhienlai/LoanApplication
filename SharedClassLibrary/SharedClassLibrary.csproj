@@ -7,6 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Data\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Repositories\BusinessRepository.cs" />
+    <Compile Remove="Repositories\DemographicRepository.cs" />
+    <Compile Remove="Repositories\Interface\IListRepository.cs" />
+    <Compile Remove="Repositories\Interface\IUnitOfWork.cs" />
+    <Compile Remove="Repositories\ListRepository.cs" />
+    <Compile Remove="Repositories\LoanAppRepository.cs" />
+    <Compile Remove="Repositories\UnitOfWork.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Data\DataContext.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.2" />
