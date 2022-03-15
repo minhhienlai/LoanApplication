@@ -4,7 +4,8 @@ VS version: 2022 17.1.0
 
 How to run:
  - Step 1: Run LoanAppInitDBQuery.sql to create database and tables
- - Step 2: Run LoanAppWebApi project. 1000 records for each table will be created. It might take up to 10 seconds.
+ - Step 2: Run LoanAppWebApi project. 
+    Uncomment SeedData() part in Program.cs if you want to create sample data. 1000 records for each table will be created. It might take up to 10 seconds.
  - Step 3: Run LoanAppMVC
 
 Database structure:
