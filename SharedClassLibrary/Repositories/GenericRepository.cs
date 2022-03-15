@@ -2,15 +2,10 @@
 using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharedClassLibrary.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
     {
         protected DataContext _context;
         protected DbSet<T> table;
@@ -56,9 +51,7 @@ namespace SharedClassLibrary.Repositories
         {
             _context.SaveChanges();
         }
-        public virtual IEnumerable<T> GetByParentId(int id)
-        {
-            return null;
-        }
+        public abstract IEnumerable<T> GetByParentId(int id);
+        
     }
 }

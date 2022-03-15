@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SharedClassLibrary.Data;
-using SharedClassLibrary.Models;
-using SharedClassLibrary.Repositories;
-using SharedClassLibrary.Repositories.Interface;
+﻿using LoanAppWebAPI.Models;
+using LoanAppWebAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,7 +20,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<BusinessModel> results = _unitOfWork.GetBusinessRepository().GetAll();
+            var results = _unitOfWork.GetBusinessRepository().GetAll();
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
@@ -32,7 +29,7 @@ namespace LoanAppWebAPI.Controllers
         [Route("GetByDemo/{id}")]
         public IActionResult GetByDemographicId(int id)
         {
-            IEnumerable<BusinessModel> results = _unitOfWork.GetBusinessRepository().GetByParentId(id);
+            var results = _unitOfWork.GetBusinessRepository().GetByParentId(id);
             if (results == null) return NotFound();
             return Ok(results);
         }
@@ -41,7 +38,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            BusinessModel results = _unitOfWork.GetBusinessRepository().GetById(id);
+            var results = _unitOfWork.GetBusinessRepository().GetById(id);
             if (results == null) return NotFound();
             return Ok(results);
         }

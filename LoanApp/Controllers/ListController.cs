@@ -1,9 +1,7 @@
 ﻿using LoanAppMVC.Models;
 using LoanAppMVC.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedClassLibrary;
-using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Controllers
 {

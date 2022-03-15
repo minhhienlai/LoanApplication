@@ -1,5 +1,4 @@
 ﻿using SharedClassLibrary;
-using SharedClassLibrary.Models;
 
 namespace LoanAppMVC.Models
 {
