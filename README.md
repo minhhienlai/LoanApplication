@@ -2,6 +2,11 @@
 
 VS version: 2022 17.1.0
 
+How to run:
+ - Step 1: Run LoanAppInitDBQuery.sql to create database and tables
+ - Step 2: Run LoanAppWebApi project. 1000 records for each table will be created. It might take up to 10 seconds.
+ - Step 3: Run LoanAppMVC
+
 Database structure:
 - Demographic table contains applicant's demographic information.
 - Businesses table contains business's information. 
@@ -11,5 +16,5 @@ Relationships between tables:
 - Demographic -> Businesses : 1->M
 - Businesses -> LoanApp: 1->M
 
-On startup, 1000 random records for each table will be created. 
-Because of the 1->M relationships, some applicants might have multiple businesses while some has none. The same for business and loan applications.
+Because of the 1->M relationships, some applicants might have multiple businesses while some has none. 
+Some businesses might have multiple applications while some has none
