@@ -9,9 +9,18 @@ GO
 -- [Demographics] TABLE
 CREATE TABLE [dbo].[Demographics](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](450) NOT NULL,
-	[PhoneNo] [nvarchar](max) NOT NULL,
-	[Email] [nvarchar](max) NOT NULL,
+	[FirstName] [nvarchar](450) NULL,
+	[LastName] [nvarchar](450) NULL,
+	[PhoneNo] [nvarchar](15) NULL,
+	[Email] [nvarchar](max) NULL,
+	[Address1] [nvarchar](max) NULL,
+	[Address2] [nvarchar](max) NULL,
+	[State] int NULL,
+	[Zipcode] [nvarchar](10) NULL,
+	[CreatedAt] [Datetime] NULL,
+	[CreatedBy] [nvarchar](max) NULL,
+	[ModifiedAt] [Datetime] NULL,
+	[ModifiedBy] [nvarchar](max) NULL,
  CONSTRAINT [PK_Demographics] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -21,9 +30,13 @@ GO
 -- [Businesses] TABLE
 CREATE TABLE [dbo].[Businesses](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[BusinessCode] [nvarchar](450) NOT NULL,
-	[Name] [nvarchar](450) NOT NULL,
-	[Description] [nvarchar](max) NOT NULL,
+	[BusinessCode] [nvarchar](10) NULL,
+	[Name] [nvarchar](450) NULL,
+	[Description] [nvarchar](max) NULL,
+	[CreatedAt] [Datetime] NULL,
+	[CreatedBy] [nvarchar](max) NULL,
+	[ModifiedAt] [Datetime] NULL,
+	[ModifiedBy] [nvarchar](max) NULL,
 	[OwnerId] [int] NOT NULL,
  CONSTRAINT [PK_Businesses] PRIMARY KEY CLUSTERED 
 (
@@ -45,17 +58,21 @@ GO
 -- [LoanApps] TABLE
 CREATE TABLE [dbo].[LoanApps](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Amount] [float] NOT NULL,
-	[PayBackInMonths] [int] NOT NULL,
-	[APRPercent] [int] NOT NULL,
-	[CreditScore] [int] NOT NULL,
-	[LatePaymentRate] [float] NOT NULL,
-	[TotalDebt] [float] NOT NULL,
-	[RiskRate] [float] NOT NULL,
-	[DateSubmitted] [datetime2](7) NOT NULL,
+	[Amount] [float] NULL,
+	[PayBackInMonths] [int] NULL,
+	[APRPercent] [int] NULL,
+	[CreditScore] [int] NULL,
+	[LatePaymentRate] [float] NULL,
+	[TotalDebt] [float] NULL,
+	[RiskRate] [float] NULL,
+	[DateSubmitted] [datetime2](7) NULL,
 	[DateProcessed] [datetime2](7) NULL,
-	[Status] [int] NOT NULL,
-	[BusinessId] [int] NOT NULL,
+	[Status] [int] NULL,
+	[CreatedAt] [Datetime] NULL,
+	[CreatedBy] [nvarchar](max) NULL,
+	[ModifiedAt] [Datetime] NULL,
+	[ModifiedBy] [nvarchar](max) NULL,
+	[BusinessId] [int] NULL,
  CONSTRAINT [PK_LoanApps] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
