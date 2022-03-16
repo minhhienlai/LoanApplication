@@ -24,7 +24,7 @@ namespace LoanAppWebAPI.Data
             {
                 mb.Entity<DemographicModel>()
                 .ToTable("Demographics")
-                .HasIndex(d => new { d.Name });
+                .HasIndex(d => new { d.FirstName,d.LastName });
                 mb.Entity<DemographicModel>()
                 .HasMany(d => d.Business)
                 .WithOne(b => b.Owner)
