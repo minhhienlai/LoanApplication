@@ -12,15 +12,15 @@ namespace LoanAppWebAPI.Repositories
         {
             this._context = context;
         }
-        public IEnumerable<ListModel> GetList()
+        public IEnumerable<ListModelDTO> GetList()
         {
             var result = _context.Set<LoanAppModel>()
                 .Include(b => b.Business)
                 .ThenInclude(o => o.Owner)
-                .Select(l => new ListModel() {
+                .Select(l => new ListModelDTO() {
                     DemographicId = l.Business.Owner.Id
                     , LoanApplicationId = l.Id
-                    , DemographicName = l.Business.Owner.Name
+                    , DemographicName = l.Business.Owner.FirstName + " " + l.Business.Owner.LastName
                     , Email = l.Business.Owner.Email
                     , PhoneNo = l.Business.Owner.PhoneNo
                     , BusinessCode = l.Business.BusinessCode
@@ -29,19 +29,19 @@ namespace LoanAppWebAPI.Repositories
                     , CreditScore = l.CreditScore
                     , RiskRate = l.RiskRate
                 }).ToList();
-            return (IEnumerable<ListModel>)result;
+            return (IEnumerable<ListModelDTO>)result;
         }
 
-        public IEnumerable<ListModel> Search(string? app, string? bcode, string? bname,
+        public IEnumerable<ListModelDTO> Search(string? app, string? bcode, string? bname,
             int? MinScore, int? MaxScore, int? MinAmount, int? MaxAmount)
         {
             var result = _context.Set<LoanAppModel>()
                 .Include(b => b.Business)
                 .ThenInclude(o => o.Owner)
-                .Select(l => new ListModel() {
+                .Select(l => new ListModelDTO() {
                     DemographicId = l.Business.Owner.Id
                     , LoanApplicationId = l.Id
-                    , DemographicName = l.Business.Owner.Name
+                    , DemographicName = l.Business.Owner.FirstName + " " + l.Business.Owner.LastName
                     , Email = l.Business.Owner.Email
                     , PhoneNo = l.Business.Owner.PhoneNo
                     , BusinessCode = l.Business.BusinessCode
@@ -59,7 +59,7 @@ namespace LoanAppWebAPI.Repositories
                                 && (MaxAmount == null || MaxAmount == 0 || l.Amount < MaxAmount)
                                 ))
                 .ToList();
-            return (IEnumerable<ListModel>)result;
+            return (IEnumerable<ListModelDTO>)result;
         }
     }
 }

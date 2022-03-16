@@ -19,7 +19,7 @@ namespace LoanAppWebAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<ListModel> results = _unitOfWork.GetListRepository().GetList();
+            IEnumerable<ListModelDTO> results = _unitOfWork.GetListRepository().GetList();
             if (results.Count() == 0) return NotFound();
             return Ok(results);
         }
@@ -29,7 +29,7 @@ namespace LoanAppWebAPI.Controllers
         public IActionResult Get(string? app, string? bcode, string? bname,
             int? MinScore, int? MaxScore, int? MinAmount, int? MaxAmount)
         {
-            IEnumerable<ListModel> results = _unitOfWork.GetListRepository().Search(
+            IEnumerable<ListModelDTO> results = _unitOfWork.GetListRepository().Search(
                 app, bcode, bname, MinScore,  MaxScore,  MinAmount,  MaxAmount);
             if (results.Count() == 0) return NotFound();
             return Ok(results);

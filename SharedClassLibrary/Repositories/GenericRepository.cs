@@ -9,11 +9,13 @@ namespace SharedClassLibrary.Repositories
     {
         protected DataContext _context;
         protected DbSet<T> table;
+
         public GenericRepository(DataContext _context)
         {
             this._context = _context;
             table = _context.Set<T>();
         }
+
         public IEnumerable<T> GetAll()
         {
             return table.ToList();

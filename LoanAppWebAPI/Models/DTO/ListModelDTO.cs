@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LoanAppWebAPI.Models
 {
-    public class ListModel : BaseModel
+    public class ListModelDTO : BaseModel
     {
         public int LoanApplicationId { get; set; }
         public int DemographicId { get; set; }

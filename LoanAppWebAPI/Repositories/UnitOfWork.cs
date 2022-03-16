@@ -96,7 +96,8 @@ namespace LoanAppWebAPI.Repositories
 
             for (int i = 0; i < count; i++) {
                 list.Add(new DemographicModel() {
-                    Name = RandomString(4, 6),
+                    FirstName = RandomString(4, 6),
+                    LastName = RandomString(4, 6),
                     PhoneNo = RandomNumber(10),
                     Email = RandomString(6, 10) + "@gmail.com",
                     CreatedAt = DateTime.Now,

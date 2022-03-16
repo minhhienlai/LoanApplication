@@ -30,6 +30,7 @@
     <Content Remove="Views\Demographic\Details.cshtml" />
     <Content Remove="Views\LoanApp\Delete.cshtml" />
     <Content Remove="Views\LoanApp\Details.cshtml" />
+    <Content Remove="Views\Shared\Error.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
