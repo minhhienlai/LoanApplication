@@ -9,12 +9,17 @@ GO
 -- [Demographics] TABLE
 CREATE TABLE [dbo].[Demographics](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](450) NULL,
-	[PhoneNo] [nvarchar](max) NULL,
+	[FirstName] [nvarchar](450) NULL,
+	[LastName] [nvarchar](450) NULL,
+	[PhoneNo] [nvarchar](15) NULL,
 	[Email] [nvarchar](max) NULL,
-	[CreatedAt] Datetime NULL,
+	[Address1] [nvarchar](max) NULL,
+	[Address2] [nvarchar](max) NULL,
+	[State] int NULL,
+	[Zipcode] [nvarchar](10) NULL,
+	[CreatedAt] [Datetime] NULL,
 	[CreatedBy] [nvarchar](max) NULL,
-	[ModifiedAt] Datetime NULL,
+	[ModifiedAt] [Datetime] NULL,
 	[ModifiedBy] [nvarchar](max) NULL,
  CONSTRAINT [PK_Demographics] PRIMARY KEY CLUSTERED 
 (
@@ -25,14 +30,14 @@ GO
 -- [Businesses] TABLE
 CREATE TABLE [dbo].[Businesses](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[BusinessCode] [nvarchar](450) NULL,
+	[BusinessCode] [nvarchar](10) NULL,
 	[Name] [nvarchar](450) NULL,
 	[Description] [nvarchar](max) NULL,
-	[CreatedAt] Datetime NULL,
+	[CreatedAt] [Datetime] NULL,
 	[CreatedBy] [nvarchar](max) NULL,
-	[ModifiedAt] Datetime NULL,
+	[ModifiedAt] [Datetime] NULL,
 	[ModifiedBy] [nvarchar](max) NULL,
-	[OwnerId] [int] NULL,
+	[OwnerId] [int] NOT NULL,
  CONSTRAINT [PK_Businesses] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -59,13 +64,13 @@ CREATE TABLE [dbo].[LoanApps](
 	[CreditScore] [int] NULL,
 	[LatePaymentRate] [float] NULL,
 	[TotalDebt] [float] NULL,
-	[RiskRate] [float] NOT NULL,
+	[RiskRate] [float] NULL,
 	[DateSubmitted] [datetime2](7) NULL,
 	[DateProcessed] [datetime2](7) NULL,
 	[Status] [int] NULL,
-	[CreatedAt] Datetime NULL,
+	[CreatedAt] [Datetime] NULL,
 	[CreatedBy] [nvarchar](max) NULL,
-	[ModifiedAt] Datetime NULL,
+	[ModifiedAt] [Datetime] NULL,
 	[ModifiedBy] [nvarchar](max) NULL,
 	[BusinessId] [int] NULL,
  CONSTRAINT [PK_LoanApps] PRIMARY KEY CLUSTERED 
