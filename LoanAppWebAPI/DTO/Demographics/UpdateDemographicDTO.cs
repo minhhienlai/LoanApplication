@@ -1,10 +1,10 @@
-﻿using SharedClassLibrary.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace LoanAppWebAPI.Models
+namespace LoanAppWebAPI.Models.DTO
 {
-    public class DemographicModel : BaseModel
+    public class UpdateDemographicDTO
     {
+        [Key]
         public int Id { get; set; }
         [Required(ErrorMessage = "Please enter your first name")]
         [Display(Name = "First name")]
@@ -20,11 +20,9 @@ namespace LoanAppWebAPI.Models
         public string? Address2 { get; set; }
         [Range(0, 50, ErrorMessage = "Invalid state value")]
         public int State { get; set; }
+
         [RegularExpression("^\\d{5}$", ErrorMessage = "Please enter a valid zip code")]
-        public string? Zipcode { get; set; }
-
-        public List<BusinessModel>? Business { get; set; }
-
-        public override string TableName => "Demographics";
+        public string Zipcode { get; set; }
+        public string? currentuser { get; set; }
     }
 }

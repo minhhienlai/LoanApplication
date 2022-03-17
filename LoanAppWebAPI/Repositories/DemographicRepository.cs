@@ -1,12 +1,12 @@
-﻿using LoanAppWebAPI.Data;
-using LoanAppWebAPI.Models;
+﻿using LoanAppWebAPI.Models;
+using SharedClassLibrary.Data;
 using SharedClassLibrary.Repositories;
 
 namespace LoanAppWebAPI.Repositories
 {
     public class DemographicRepository : GenericRepository<DemographicModel>
     {
-        public DemographicRepository(APIDataContext _context) : base(_context)
+        public DemographicRepository(DataContext _context) : base(_context)
         {
         }
 

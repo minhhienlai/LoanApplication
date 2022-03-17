@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Compile Include="Data\DataContext.cs" />
+    <Compile Include="Data\DomainRegister.cs" />
     <Compile Include="Models\BaseModel.cs" />
   </ItemGroup>
 

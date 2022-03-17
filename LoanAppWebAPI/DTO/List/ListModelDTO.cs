@@ -21,5 +21,7 @@ namespace LoanAppWebAPI.Models
         public double Amount { get; set; }
         public int CreditScore { get; set; }
         public double RiskRate { get; set; }
+
+        public override string TableName => throw new NotImplementedException();
     }
 }

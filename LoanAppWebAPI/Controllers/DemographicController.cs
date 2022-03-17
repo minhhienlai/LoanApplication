@@ -1,4 +1,7 @@
-﻿using LoanAppWebAPI.Models;
+﻿using LoanAppWebAPI.DTO.Demographics;
+using LoanAppWebAPI.Mapper;
+using LoanAppWebAPI.Models;
+using LoanAppWebAPI.Models.DTO;
 using LoanAppWebAPI.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +17,6 @@ namespace LoanAppWebAPI.Controllers
         public DemographicController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            //_unitOfWork = InitRepository();
         }
      
         // GET: api/<DemographicController>
@@ -23,37 +25,43 @@ namespace LoanAppWebAPI.Controllers
         {
             IEnumerable<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetAll();
             if (results.Count() == 0) return NotFound();
-            return Ok(results);
+            List<DemographicResponseDto> resultsDto = new List<DemographicResponseDto>();
+            foreach (var result in results)
+            {
+                resultsDto.Add(DemographicMapper.ToDemographicResponse(result));
+            }
+            return Ok(resultsDto);
         }
 
         // GET api/<DemographicController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            DemographicModel results = _unitOfWork.GetDemographicRepository().GetById(id);
-            if (results == null) return NotFound();
-            return Ok(results);
+            DemographicModel result = _unitOfWork.GetDemographicRepository().GetById(id);
+            if (result == null) return NotFound();
+            return Ok(DemographicMapper.ToDemographicResponse(result));
         }
 
         // POST api/<DemographicController>
         [HttpPost]
-        public IActionResult Post([FromBody] DemographicModel value)
+        public IActionResult Post([FromBody] DemographicRequestDto value)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-            _unitOfWork.GetDemographicRepository().Insert(value);
+            DemographicModel model = DemographicMapper.InsertToDemographicModel(value);
+            _unitOfWork.GetDemographicRepository().Insert(model);
             _unitOfWork.Save();
-            return Ok(value.Id);
+            return Ok(model.Id);
         }
 
         // PUT api/<DemographicController>
         [HttpPut]
-        public IActionResult Put([FromBody] DemographicModel value)
+        public IActionResult Put([FromBody] DemographicRequestDto value)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-
-            if (_unitOfWork.GetDemographicRepository().Update(value))
+            DemographicModel model = DemographicMapper.UpdateToDemographicModel(value);
+            if (_unitOfWork.GetDemographicRepository().Update(model))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);

@@ -2,10 +2,8 @@
 
 namespace LoanAppWebAPI.Models.DTO
 {
-    public class DemographicDTO
+    public class InsertDemographicDTO
     {
-        [Key]
-        public int Id { get; set; }
         [Required(ErrorMessage = "Please enter your first name")]
         [Display(Name = "First name")]
         public string? FirstName { get; set; }
@@ -18,10 +16,11 @@ namespace LoanAppWebAPI.Models.DTO
         public string? Email { get; set; }
         public string? Address1 { get; set; }
         public string? Address2 { get; set; }
+        [Range(0, 50, ErrorMessage = "Invalid state value")]
         public int State { get; set; }
 
         [RegularExpression("^\\d{5}$", ErrorMessage = "Please enter a valid zip code")]
         public string Zipcode { get; set; }
-        public List<BusinessModel>? Business { get; set; }
+        public string? currentuser { get; set; }
     }
 }

@@ -16,5 +16,7 @@ namespace LoanAppWebAPI.Models
         public int OwnerId { get; set; }
         public DemographicModel? Owner { get; set; }
         public List<LoanAppModel>? LoanApps { get; set; }
+
+        public override string TableName => "Businesses";
     }
 }

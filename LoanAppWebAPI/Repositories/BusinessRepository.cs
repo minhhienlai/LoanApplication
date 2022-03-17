@@ -1,12 +1,12 @@
-﻿using LoanAppWebAPI.Data;
-using LoanAppWebAPI.Models;
+﻿using LoanAppWebAPI.Models;
+using SharedClassLibrary.Data;
 using SharedClassLibrary.Repositories;
 
 namespace LoanAppWebAPI.Repositories
 {
     public class BusinessRepository : GenericRepository<BusinessModel>
     {
-        public BusinessRepository(APIDataContext _context) : base(_context)
+        public BusinessRepository(DataContext _context) : base(_context)
         {
         }
         public override IEnumerable<BusinessModel> GetByParentId(int ownerId)

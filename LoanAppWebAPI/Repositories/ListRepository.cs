@@ -1,14 +1,14 @@
-﻿using LoanAppWebAPI.Data;
-using LoanAppWebAPI.Models;
+﻿using LoanAppWebAPI.Models;
 using LoanAppWebAPI.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using SharedClassLibrary.Data;
 
 namespace LoanAppWebAPI.Repositories
 {
     public class ListRepository: IListRepository
     {
-        protected APIDataContext _context;
-        public ListRepository(APIDataContext context)
+        protected DataContext _context;
+        public ListRepository(DataContext context)
         {
             this._context = context;
         }

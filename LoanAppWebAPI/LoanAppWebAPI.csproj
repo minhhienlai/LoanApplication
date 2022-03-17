@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\APIDataContext.cs" />
+    <Compile Remove="DTO\Demographics\InsertDemographicDTO.cs" />
+    <Compile Remove="DTO\Demographics\UpdateDemographicDTO.cs" />
     <Compile Remove="Models\LoanAppContext.cs" />
   </ItemGroup>
 
@@ -25,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

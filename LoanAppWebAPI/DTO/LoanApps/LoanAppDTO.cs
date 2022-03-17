@@ -16,17 +16,13 @@ namespace LoanAppWebAPI.Models.DTO
         public double RiskRate { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime DateSubmitted
-        {
-            get; set;
-        }
+        public DateTime DateSubmitted { get; set; }
+        
         [DataType(DataType.Date)]
         public DateTime? DateProcessed { get; set; }
         public int Status { get; set; }
 
-        [ForeignKey("Business")]
         public int BusinessId { get; set; }
-        public BusinessModel? Business { get; set; }
 
     }
 }

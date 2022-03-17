@@ -1,6 +1,6 @@
-﻿using LoanAppWebAPI.Data;
-using LoanAppWebAPI.Models;
+﻿using LoanAppWebAPI.Models;
 using LoanAppWebAPI.Repositories.Interface;
+using SharedClassLibrary.Data;
 using SharedClassLibrary.Repositories;
 using SharedClassLibrary.Repositories.Interface;
 
@@ -8,14 +8,14 @@ namespace LoanAppWebAPI.Repositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private APIDataContext _context;
+        private DataContext _context;
         private ListRepository _listRepository;
         private GenericRepository<DemographicModel> _demographicRepository;
         private GenericRepository<BusinessModel> _businessRepository;
         private GenericRepository<LoanAppModel> _loanAppRepository;
         private static Random random = new Random();
 
-        public UnitOfWork(APIDataContext context)
+        public UnitOfWork(DataContext context)
         {
             _context = context;
         }
@@ -101,7 +101,11 @@ namespace LoanAppWebAPI.Repositories
                     PhoneNo = RandomNumber(10),
                     Email = RandomString(6, 10) + "@gmail.com",
                     CreatedAt = DateTime.Now,
-                    CreatedBy = "SeedData"
+                    CreatedBy = "SeedData",
+                    Address1 = RandomString(10),
+                    Address2 = RandomString(5,10),
+                    Zipcode = RandomNumber(5),
+                    State = random.Next(1,50)
                 });
             }
 

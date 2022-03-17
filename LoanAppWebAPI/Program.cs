@@ -1,14 +1,23 @@
-using LoanAppWebAPI.Data;
+using LoanAppWebAPI.Models;
 using LoanAppWebAPI.Repositories;
 using LoanAppWebAPI.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using SharedClassLibrary.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("LoanAppMVCContext");
 
 // Add services to the container.
-builder.Services.AddDbContext<APIDataContext>();
+//builder.Services.AddDbContext<APIDataContext>();
 
+DomainRegister.Instance
+    .Register<DemographicModel>("Demographics")
+    .Register<BusinessModel>("Businesses")
+    .Register<LoanAppModel>("LoanApps")
+    .Build();
+
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(connectionString));//, b => b.MigrationsAssembly("LoanAppMVC")));
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 

@@ -28,6 +28,8 @@ namespace LoanAppWebAPI.Models
         public int BusinessId { get; set; }
         public BusinessModel? Business { get; set; }
 
+        public override string TableName => "LoanApps";
+
         public LoanAppModel()
         {
             Random r = new Random();
