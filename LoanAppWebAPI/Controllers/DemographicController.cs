@@ -3,6 +3,7 @@ using LoanAppWebAPI.Mapper;
 using LoanAppWebAPI.Models;
 using LoanAppWebAPI.Models.DTO;
 using LoanAppWebAPI.Repositories.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,6 +25,18 @@ namespace LoanAppWebAPI.Controllers
         public IActionResult Get()
         {
             IEnumerable<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetAll();
+            if (results.Count() == 0) return NotFound();
+            List<DemographicResponseDto> resultsDto = new List<DemographicResponseDto>();
+            foreach (var result in results)
+            {
+                resultsDto.Add(DemographicMapper.ToDemographicResponse(result));
+            }
+            return Ok(resultsDto);
+        }
+        [HttpGet("GetPaging")]
+        public IActionResult GetPaging([FromQuery] int? pageNumber, int? pageSize)
+        {
+            IEnumerable<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetPaging(pageNumber, pageSize);
             if (results.Count() == 0) return NotFound();
             List<DemographicResponseDto> resultsDto = new List<DemographicResponseDto>();
             foreach (var result in results)
@@ -61,7 +74,8 @@ namespace LoanAppWebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
             DemographicModel model = DemographicMapper.UpdateToDemographicModel(value);
-            if (_unitOfWork.GetDemographicRepository().Update(model))
+
+            if (_unitOfWork.GetDemographicRepository().Patch(model.Id, model))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);

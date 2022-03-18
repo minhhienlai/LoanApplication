@@ -19,10 +19,10 @@ namespace LoanAppWebAPI.DTO.Demographics
         public string? Address1 { get; set; }
         public string? Address2 { get; set; }
         [Range(0, 50, ErrorMessage = "Invalid state value")]
-        public int State { get; set; }
+        public int? State { get; set; }
 
         [RegularExpression("^\\d{5}$", ErrorMessage = "Please enter a valid zip code")]
-        public string Zipcode { get; set; }
+        public string? Zipcode { get; set; }
         public string? currentuser { get; set; }
     }
 }

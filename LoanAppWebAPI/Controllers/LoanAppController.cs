@@ -62,7 +62,7 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-            if (_unitOfWork.GetLoanAppRepository().Update(value))
+            if (_unitOfWork.GetLoanAppRepository().UpdateAllProperties(value))
             {
                 _unitOfWork.Save();
                 return Ok();

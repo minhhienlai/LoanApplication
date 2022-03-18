@@ -10,7 +10,7 @@ namespace LoanAppWebAPI.Models.DTO
         public string? Email { get; set; }
         public string? Address1 { get; set; }
         public string? Address2 { get; set; }
-        public int State { get; set; }
+        public int? State { get; set; }
 
         public string? Zipcode { get; set; }
         public DateTime? CreatedAt { get; set; }

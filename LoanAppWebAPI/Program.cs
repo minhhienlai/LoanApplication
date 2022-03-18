@@ -19,6 +19,7 @@ DomainRegister.Instance
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connectionString));//, b => b.MigrationsAssembly("LoanAppMVC")));
 builder.Services.AddControllers();
+//builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
