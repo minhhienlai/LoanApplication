@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
 using SharedClassLibrary.Models;
 using SharedClassLibrary.Repositories.Interface;
@@ -11,6 +10,7 @@ namespace SharedClassLibrary.Repositories
         protected DataContext _context;
         protected DbSet<T> table;
 
+        #region GET
         public GenericRepository(DataContext _context)
         {
             this._context = _context;
@@ -21,15 +21,27 @@ namespace SharedClassLibrary.Repositories
         {
             return table.ToList();
         }
+        public PaginatedList<T> GetPaging(int? pageNumber, int? pageSize)
+        {
+            List<T> listAll = table.ToList();
+            return PaginatedList<T>.Create(listAll, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
+        }
         public T GetById(object id)
         {
             return table.Find(id);
         }
+        public abstract IEnumerable<T> GetByParentId(int id);
+        #endregion
+
+        #region INSERT
         public void Insert(T obj)
         {
             table.Add(obj);
             Save();
         }
+
+        #endregion
+        #region UPDATE
         public bool UpdateAllProperties(T obj)
         {
             try {
@@ -52,13 +64,6 @@ namespace SharedClassLibrary.Repositories
                     _context.Entry(objToUpdate).State = EntityState.Detached;
                     table.Attach(obj);
                     _context.Entry(obj).State = EntityState.Modified;
-                    //_context.Entry(obj).Property(o => o.CreatedAt).IsModified = true;
-                    //_context.AttachToFetch(obj).PropertyToFetch(o => o.CreatedAt)
-                    //                            .PropertyToFetch(o => o.CreatedBy)
-                    //                            .Fetch();
-                    //_context.Attach(obj).PropertyToFetch(o => o.CreatedAt)
-                    //                            .PropertyToFetch(o => o.CreatedBy)
-                    //                            .Fetch();
                     Save();
                 }
                 return true;
@@ -66,7 +71,29 @@ namespace SharedClassLibrary.Repositories
                 return false;
             }
         }
-        public abstract bool Fetch(int id, T obj);
+        public bool UpdateSelectedProperties(int id, T obj)
+        {
+            try {
+                table.Attach(obj);
+                _context = SetPropertiesToUpdate(obj);
+                Save();
+                return true;
+            }
+            catch (Exception ex) {
+                return false;
+            }
+        }
+        private DataContext SetPropertiesToUpdate(T obj)
+        {
+            List<string> propertyList = GetPropertiesToUpdate();
+            foreach (var property in propertyList) {
+                _context.Entry(obj).Property(property).IsModified = true;
+            }
+            return _context;
+        }
+        public abstract List<string> GetPropertiesToUpdate();
+        #endregion
+        #region DELETE
         public void Delete(object id)
         {
             T objToDelete = table.Find(id);
@@ -75,18 +102,12 @@ namespace SharedClassLibrary.Repositories
                 Save();
             }
         }
+        #endregion
+        #region SAVE
         public void Save()
         {
             _context.SaveChanges();
         }
-        public abstract IEnumerable<T> GetByParentId(int id);
-
-        public PaginatedList<T> GetPaging(int? pageNumber, int? pageSize)
-        {
-            List<T> listAll = table.ToList();
-            return PaginatedList<T>.Create(listAll, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
-        }
-
-       
+        #endregion
     }
 }

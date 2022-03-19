@@ -14,5 +14,6 @@ namespace SharedClassLibrary.Data
                 DomainRegister.Instance.IsModelCreated = true;
             }
         }
+
     }
 }

@@ -75,7 +75,7 @@ namespace LoanAppWebAPI.Controllers
                 return BadRequest("Invalid data.");
             DemographicModel model = DemographicMapper.UpdateToDemographicModel(value);
 
-            if (_unitOfWork.GetDemographicRepository().Patch(model.Id, model))
+            if (_unitOfWork.GetDemographicRepository().UpdateSelectedProperties(model.Id, model))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);

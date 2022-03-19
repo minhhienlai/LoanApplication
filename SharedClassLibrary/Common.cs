@@ -8,9 +8,5 @@ namespace SharedClassLibrary
         {
             return "{'" + key + "'}:{'" + value + "'}";
         }
-        public static string CreateMessage(string key, string value)
-        {
-            return key + value;
-        }
     }
 }
