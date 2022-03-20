@@ -1,23 +1,24 @@
-﻿using LoanAppWebAPI.Models;
+﻿using LoanAppWebAPI.DTO.ApplicationList;
+using LoanAppWebAPI.Models;
 using LoanAppWebAPI.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using SharedClassLibrary.Data;
 
 namespace LoanAppWebAPI.Repositories
 {
-    public class ListRepository: IListRepository
+    public class ApplicationListRepository: IApplicationListRepository
     {
         protected DataContext _context;
-        public ListRepository(DataContext context)
+        public ApplicationListRepository(DataContext context)
         {
             this._context = context;
         }
-        public IEnumerable<ListModelDTO> GetList()
+        public IEnumerable<ApplicationListResponseDto> GetList()
         {
             var result = _context.Set<LoanAppModel>()
                 .Include(b => b.Business)
                 .ThenInclude(o => o.Owner)
-                .Select(l => new ListModelDTO() {
+                .Select(l => new ApplicationListResponseDto() {
                     DemographicId = l.Business.Owner.Id
                     , LoanApplicationId = l.Id
                     , DemographicName = l.Business.Owner.FirstName + " " + l.Business.Owner.LastName
@@ -29,16 +30,16 @@ namespace LoanAppWebAPI.Repositories
                     , CreditScore = l.CreditScore
                     , RiskRate = l.RiskRate
                 }).ToList();
-            return (IEnumerable<ListModelDTO>)result;
+            return (IEnumerable<ApplicationListResponseDto>)result;
         }
 
-        public IEnumerable<ListModelDTO> Search(string? app, string? bcode, string? bname,
+        public IEnumerable<ApplicationListResponseDto> Search(string? app, string? bcode, string? bname,
             int? MinScore, int? MaxScore, int? MinAmount, int? MaxAmount)
         {
             var result = _context.Set<LoanAppModel>()
                 .Include(b => b.Business)
                 .ThenInclude(o => o.Owner)
-                .Select(l => new ListModelDTO() {
+                .Select(l => new ApplicationListResponseDto() {
                     DemographicId = l.Business.Owner.Id
                     , LoanApplicationId = l.Id
                     , DemographicName = l.Business.Owner.FirstName + " " + l.Business.Owner.LastName
@@ -59,7 +60,8 @@ namespace LoanAppWebAPI.Repositories
                                 && (MaxAmount == null || MaxAmount == 0 || l.Amount < MaxAmount)
                                 ))
                 .ToList();
-            return (IEnumerable<ListModelDTO>)result;
+            return (IEnumerable<ApplicationListResponseDto>)result;
         }
+
     }
 }

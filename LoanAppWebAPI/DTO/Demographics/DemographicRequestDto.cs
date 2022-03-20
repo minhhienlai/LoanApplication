@@ -23,6 +23,6 @@ namespace LoanAppWebAPI.DTO.Demographics
 
         [RegularExpression("^\\d{5}$", ErrorMessage = "Please enter a valid zip code")]
         public string? Zipcode { get; set; }
-        public string? currentuser { get; set; }
+        public string? UserRequested { get; set; }
     }
 }

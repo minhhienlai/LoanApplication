@@ -14,15 +14,5 @@ namespace LoanAppWebAPI.Repositories
         {
             return table.Where(b => b.OwnerId == ownerId).ToList();
         }
-
-        //public override List<Expression<Func<TEntity, TProperty>>> GetPropertiesExpressionToUpdate<TEntity, TProperty>()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public override List<string> GetPropertiesToUpdate()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

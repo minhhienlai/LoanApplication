@@ -15,7 +15,7 @@ namespace LoanAppWebAPI.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
+        #region GET
         // GET: api/<BusinessController>
         [HttpGet]
         public IActionResult Get()
@@ -42,7 +42,8 @@ namespace LoanAppWebAPI.Controllers
             if (results == null) return NotFound();
             return Ok(results);
         }
-
+        #endregion
+        #region POST PUT
         // POST api/<BusinessController>
         [HttpPost]
         public IActionResult Post([FromBody] BusinessModel value)
@@ -61,15 +62,27 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-
-            if (_unitOfWork.GetBusinessRepository().UpdateAllProperties(value))
+            List<string> propertyList = GetPropertiesToUpdate();
+            if (_unitOfWork.GetBusinessRepository().UpdateSelectedProperties(value.Id,value,propertyList))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);
             }
             return NotFound();
         }
-
+        private List<string> GetPropertiesToUpdate()
+        {
+            List<string> result = new List<string>();
+            result.Add("BusinessCode");
+            result.Add("Name");
+            result.Add("Description");
+            result.Add("OwnerId");
+            result.Add("ModifiedBy");
+            result.Add("ModifiedAt");
+            return result;
+        }
+        #endregion
+        #region DELETE
         // DELETE api/<BusinessController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -79,5 +92,6 @@ namespace LoanAppWebAPI.Controllers
 
             return Ok();
         }
+        #endregion
     }
 }

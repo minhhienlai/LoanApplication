@@ -11,7 +11,7 @@ namespace SharedClassLibrary.Repositories.Interface
         public void Insert(T obj);
         public bool UpdateAllProperties(T obj);
         public bool UpdateAllButCreated(int id, T obj);
-        public bool UpdateSelectedProperties(int id, T obj) ;
+        public bool UpdateSelectedProperties(int id, T obj, List<string> propertyList) ;
         public void Delete(object id);
         public void Save();
     }

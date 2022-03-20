@@ -16,7 +16,7 @@ namespace LoanAppWebAPI.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
+        #region GET
         // GET: api/<LoanAppController>
         [HttpGet]
         public IActionResult Get()
@@ -43,7 +43,8 @@ namespace LoanAppWebAPI.Controllers
             if (results == null) return NotFound();
             return Ok(results);
         }
-
+        #endregion
+        #region POST PUT
         // POST api/<LoanAppController>
         [HttpPost]
         public IActionResult Post([FromBody] LoanAppModel value)
@@ -62,14 +63,34 @@ namespace LoanAppWebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
-            if (_unitOfWork.GetLoanAppRepository().UpdateAllProperties(value))
+            List<string> propertyList = GetPropertiesToUpdate();
+            if (_unitOfWork.GetLoanAppRepository().UpdateSelectedProperties(value.Id,value,propertyList))
             {
                 _unitOfWork.Save();
                 return Ok();
             }
             return NotFound();
         }
-
+        private List<string> GetPropertiesToUpdate()
+        {
+            List<string> result = new List<string>();
+            result.Add("Amount");
+            result.Add("PayBackInMonths");
+            result.Add("APRPercent");
+            result.Add("CreditScore");
+            result.Add("LatePaymentRate");
+            result.Add("TotalDebt");
+            result.Add("RiskRate");
+            result.Add("DateSubmitted");
+            result.Add("DateProcessed");
+            result.Add("Status");
+            result.Add("BusinessId");
+            result.Add("ModifiedBy");
+            result.Add("ModifiedAt");
+            return result;
+        }
+        #endregion
+        #region DELETE
         // DELETE api/<LoanAppController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -79,5 +100,6 @@ namespace LoanAppWebAPI.Controllers
 
             return Ok();
         }
+        #endregion
     }
 }

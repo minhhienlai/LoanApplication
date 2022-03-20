@@ -1,6 +1,5 @@
 ﻿using LoanAppWebAPI.DTO.Demographics;
 using LoanAppWebAPI.Models;
-using LoanAppWebAPI.Models.DTO;
 
 namespace LoanAppWebAPI.Mapper
 {
@@ -37,7 +36,7 @@ namespace LoanAppWebAPI.Mapper
                 Address2 = dto.Address2,
                 State = dto.State,
                 Zipcode = dto.Zipcode,
-                CreatedBy = dto.currentuser,
+                CreatedBy = dto.UserRequested,
                 CreatedAt = DateTime.Now
             };
         }
@@ -54,7 +53,7 @@ namespace LoanAppWebAPI.Mapper
                 Address2 = dto.Address2,
                 State = dto.State,
                 Zipcode = dto.Zipcode,
-                ModifiedBy = dto.currentuser,
+                ModifiedBy = dto.UserRequested,
                 ModifiedAt = DateTime.Now
             };
         }

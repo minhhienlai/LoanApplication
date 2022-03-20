@@ -71,11 +71,11 @@ namespace SharedClassLibrary.Repositories
                 return false;
             }
         }
-        public bool UpdateSelectedProperties(int id, T obj)
+        public bool UpdateSelectedProperties(int id, T obj, List<string> propertyList)
         {
             try {
                 table.Attach(obj);
-                _context = SetPropertiesToUpdate(obj);
+                _context = SetPropertiesToUpdate(obj, propertyList);
                 Save();
                 return true;
             }
@@ -83,15 +83,13 @@ namespace SharedClassLibrary.Repositories
                 return false;
             }
         }
-        private DataContext SetPropertiesToUpdate(T obj)
+        private DataContext SetPropertiesToUpdate(T obj, List<string> propertyList)
         {
-            List<string> propertyList = GetPropertiesToUpdate();
             foreach (var property in propertyList) {
                 _context.Entry(obj).Property(property).IsModified = true;
             }
             return _context;
         }
-        public abstract List<string> GetPropertiesToUpdate();
         #endregion
         #region DELETE
         public void Delete(object id)

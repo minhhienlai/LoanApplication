@@ -9,7 +9,7 @@ namespace LoanAppWebAPI.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private DataContext _context;
-        private ListRepository _listRepository;
+        private ApplicationListRepository _listRepository;
         private GenericRepository<DemographicModel> _demographicRepository;
         private GenericRepository<BusinessModel> _businessRepository;
         private GenericRepository<LoanAppModel> _loanAppRepository;
@@ -43,10 +43,10 @@ namespace LoanAppWebAPI.Repositories
             }
             return _loanAppRepository;
         }
-        public IListRepository GetListRepository()
+        public IApplicationListRepository GetListRepository()
         {
             if (this._listRepository == null) {
-                this._listRepository = new ListRepository(_context);
+                this._listRepository = new ApplicationListRepository(_context);
             }
             return _listRepository;
         }

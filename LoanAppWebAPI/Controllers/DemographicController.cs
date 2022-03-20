@@ -1,9 +1,7 @@
 ﻿using LoanAppWebAPI.DTO.Demographics;
 using LoanAppWebAPI.Mapper;
 using LoanAppWebAPI.Models;
-using LoanAppWebAPI.Models.DTO;
 using LoanAppWebAPI.Repositories.Interface;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,7 +17,7 @@ namespace LoanAppWebAPI.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-     
+        #region GET
         // GET: api/<DemographicController>
         [HttpGet]
         public IActionResult Get()
@@ -54,7 +52,8 @@ namespace LoanAppWebAPI.Controllers
             if (result == null) return NotFound();
             return Ok(DemographicMapper.ToDemographicResponse(result));
         }
-
+        #endregion
+        #region POST PUT
         // POST api/<DemographicController>
         [HttpPost]
         public IActionResult Post([FromBody] DemographicRequestDto value)
@@ -74,8 +73,9 @@ namespace LoanAppWebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data.");
             DemographicModel model = DemographicMapper.UpdateToDemographicModel(value);
+            List<string> propertyList = GetPropertiesToUpdate();
 
-            if (_unitOfWork.GetDemographicRepository().UpdateSelectedProperties(model.Id, model))
+            if (_unitOfWork.GetDemographicRepository().UpdateSelectedProperties(model.Id, model, propertyList))
             {
                 _unitOfWork.Save();
                 return Ok(value.Id);
@@ -83,6 +83,23 @@ namespace LoanAppWebAPI.Controllers
             return NotFound();
         }
 
+        private List<string> GetPropertiesToUpdate()
+        {
+            List<string> result = new List<string>();
+            result.Add("FirstName");
+            result.Add("LastName");
+            result.Add("PhoneNo");
+            result.Add("Email");
+            result.Add("Address1");
+            result.Add("Address2");
+            result.Add("State");
+            result.Add("Zipcode");
+            result.Add("ModifiedBy");
+            result.Add("ModifiedAt");
+            return result;
+        }
+        #endregion
+        #region DELETE
         // DELETE api/<DemographicController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -92,5 +109,6 @@ namespace LoanAppWebAPI.Controllers
 
             return Ok();
         }
+        #endregion
     }
 }

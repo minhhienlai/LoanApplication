@@ -14,10 +14,5 @@ namespace LoanAppWebAPI.Repositories
         {
             return table.Where(b => b.BusinessId == businessId).ToList();
         }
-
-        public override List<string> GetPropertiesToUpdate()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

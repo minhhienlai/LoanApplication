@@ -27,4 +27,5 @@ namespace LoanAppWebAPI.Models
 
         public override string TableName => "Demographics";
     }
+    
 }

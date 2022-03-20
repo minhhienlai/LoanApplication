@@ -17,10 +17,8 @@ namespace LoanAppWebAPI.Models
         public double RiskRate { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime DateSubmitted {
-            get;set;
-        }
-            [DataType(DataType.Date)]
+        public DateTime DateSubmitted { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? DateProcessed { get; set; }
         public int Status { get; set; }
 
@@ -30,7 +28,7 @@ namespace LoanAppWebAPI.Models
 
         public override string TableName => "LoanApps";
 
-        public LoanAppModel()
+        public LoanAppModel InitTestValue()
         {
             Random r = new Random();
             APRPercent = r.Next(4, 12);
@@ -39,6 +37,8 @@ namespace LoanAppWebAPI.Models
             TotalDebt = r.Next(25000,1000000);
 
             RiskRate = Math.Round(((TotalDebt / CreditScore - 33)/17+ LatePaymentRate)/2);
+
+            return this;
         }
     }
 }

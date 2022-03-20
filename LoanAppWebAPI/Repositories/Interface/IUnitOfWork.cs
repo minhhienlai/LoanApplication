@@ -8,7 +8,7 @@ namespace LoanAppWebAPI.Repositories.Interface
         public IGenericRepository<DemographicModel> GetDemographicRepository();
         public IGenericRepository<BusinessModel> GetBusinessRepository();
         public IGenericRepository<LoanAppModel> GetLoanAppRepository();
-        public IListRepository GetListRepository();
+        public IApplicationListRepository GetListRepository();
         public void Save();
     }
 }

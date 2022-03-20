@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LoanAppWebAPI.Models.DTO
+namespace LoanAppWebAPI.DTO.Demographics
 {
     public class DemographicResponseDto
     {
