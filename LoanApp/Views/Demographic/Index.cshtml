@@ -1,7 +1,12 @@
-﻿@using LoanAppMVC.Models
-@model IEnumerable<DemographicModel>
+﻿@using LoanAppMVC.Client.LoanApiResponseDto
+@using SharedClassLibrary
+@model PaginatedList<DemographicViewResponseDto>
 @{
     ViewData["Title"] = "Index";
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
 <h1>Index</h1>
@@ -15,28 +20,48 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Full Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhoneNo)
+                Phone Number
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Email
             </th>
-            <th></th>
+            <th>
+                Address
+            </th>
+            <th>
+                State
+            </th>
+            <th>
+                Zipcode
+            </th>
+            <th>
+                Action
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.List) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNo)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Zipcode)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -46,3 +71,25 @@
 }
     </tbody>
 </table>
+
+<a asp-action="Index" 
+    asp-route-pageNumber="1" 
+    class="btn btn-default">
+    First
+</a>
+<a asp-action="Index" 
+    asp-route-pageNumber="@(Model.PageIndex - 1)" 
+    class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.TotalPages)"
+   class="btn btn-default">
+    Last
+</a>
+<span>Page @Model.PageIndex / @Model.TotalPages</span>

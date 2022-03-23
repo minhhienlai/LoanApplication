@@ -1,4 +1,6 @@
 ﻿#nullable disable
+using LoanAppMVC.Client.LoanApiRequestDto;
+using LoanAppMVC.Client.LoanApiResponseDto;
 using LoanAppMVC.Models;
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +18,12 @@ namespace LoanAppMVC.Controllers
         // GET: Business
         public async Task<IActionResult> Index()
         {
-            IList<BusinessModel> models = new List<BusinessModel>();
+            IList<BusinessResponseDto> models = new List<BusinessResponseDto>();
 
             var result = await _httpClient.GetAsync(apiController);
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<IList<BusinessModel>>();
+                var readTask = result.Content.ReadAsAsync<IList<BusinessResponseDto>>();
                 readTask.Wait();
 
                 models = readTask.Result;
@@ -35,12 +37,12 @@ namespace LoanAppMVC.Controllers
 
         public async Task<IActionResult> List(int ownerid)
         {
-            IList<BusinessModel> models = new List<BusinessModel>();
+            IList<BusinessResponseDto> models = new List<BusinessResponseDto>();
 
             var result = await _httpClient.GetAsync(apiController+"/GetByDemo/"+ ownerid.ToString());
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<IList<BusinessModel>>();
+                var readTask = result.Content.ReadAsAsync<IList<BusinessResponseDto>>();
                 readTask.Wait();
 
                 models = readTask.Result;
@@ -56,7 +58,7 @@ namespace LoanAppMVC.Controllers
 
         public IActionResult Create(int? ownerId)
         {
-            BusinessModel model = new BusinessModel();
+            BusinessRequestDto model = new BusinessRequestDto();
             model.OwnerId = ownerId.HasValue? ownerId.Value:0;
             return View(model);
         }
@@ -66,9 +68,9 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BusinessModel model)
+        public async Task<IActionResult> Create(BusinessRequestDto model)
         {
-            var result = await _httpClient.PostAsJsonAsync<BusinessModel>(apiController, model);
+            var result = await _httpClient.PostAsJsonAsync<BusinessRequestDto>(apiController, model);
 
             if (result.IsSuccessStatusCode)
             {
@@ -92,12 +94,12 @@ namespace LoanAppMVC.Controllers
                return NotFound();
             }
 
-            BusinessModel model = new BusinessModel();
+            BusinessRequestDto model = new BusinessRequestDto();
 
             var result = await _httpClient.GetAsync(apiController + "/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<BusinessModel>();
+                var readTask = result.Content.ReadAsAsync<BusinessRequestDto>();
                 readTask.Wait();
 
                 model = readTask.Result;
@@ -115,7 +117,7 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BusinessCode,Name,Description,OwnerId")] BusinessModel model)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BusinessCode,Name,Description,OwnerId")] BusinessRequestDto model)
         {
             if (id != model.Id)
             {
@@ -129,7 +131,7 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await _httpClient.PutAsJsonAsync<BusinessModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<BusinessRequestDto>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
                     int oid = result.Content.ReadAsAsync<int>().Result;

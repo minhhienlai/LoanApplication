@@ -1,7 +1,10 @@
 ﻿#nullable disable
+using LoanAppMVC.Client.LoanApiRequestDto;
+using LoanAppMVC.Client.LoanApiResponseDto;
 using LoanAppMVC.Models;
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using SharedClassLibrary;
 
 namespace LoanAppMVC.Controllers
 {
@@ -18,16 +21,24 @@ namespace LoanAppMVC.Controllers
         // GET: Demographic
         public async Task<IActionResult> Index()
         {
-            
-            IList<DemographicModel> models = new List<DemographicModel>();
+
+            PaginatedList<DemographicViewResponseDto> models = new PaginatedList<DemographicViewResponseDto>();
 
             var result = await _httpClient.GetAsync(apiController);
+            models = await result.Content.ReadAsAsync<PaginatedList<DemographicViewResponseDto>>();
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<IList<DemographicModel>>();
-                readTask.Wait();
+                //models = await result.Content.ReadAsAsync<PaginatedList<DemographicViewResponseDto>>();
+                //readTask.Wait();
 
-                models = readTask.Result;
+                //models = readTask.Result;
+
+
+                //string data = await result.Content.ReadAsStringAsync();
+                ////use JavaScriptSerializer from System.Web.Script.Serialization
+                //JavaScriptSerializer JSserializer = new JavaScriptSerializer();
+                ////deserialize to your class
+                //products = JSserializer.Deserialize<List<Product>>(data);
             }
             else //web api sent error response 
             {
@@ -46,9 +57,9 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
+        public async Task<IActionResult> Create(DemographicRequestDto model)
         {
-                var result = await _httpClient.PostAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PostAsJsonAsync<DemographicRequestDto>(apiController, model);
 
                 if (result.IsSuccessStatusCode)
                 {
@@ -72,12 +83,12 @@ namespace LoanAppMVC.Controllers
                 return NotFound();
             }
 
-            DemographicModel model = new DemographicModel();
+            DemographicEditableResponseDto model = new DemographicEditableResponseDto();
 
             var result = await _httpClient.GetAsync(apiController+"/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<DemographicModel>();
+                var readTask = result.Content.ReadAsAsync<DemographicEditableResponseDto>();
                 readTask.Wait();
 
                 model = readTask.Result;
@@ -95,7 +106,7 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
+        public async Task<IActionResult> Edit(int id, DemographicRequestDto model)
         {
             int oid=0;
             if (id != model.Id)
@@ -110,7 +121,7 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await _httpClient.PutAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<DemographicRequestDto>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
                     oid = result.Content.ReadAsAsync<int>().Result;
@@ -129,7 +140,7 @@ namespace LoanAppMVC.Controllers
                 return NotFound();
             }
             var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index","List");
+            return RedirectToAction("Index");
         }
     }
 }

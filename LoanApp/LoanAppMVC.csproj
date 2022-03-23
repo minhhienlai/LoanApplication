@@ -9,28 +9,41 @@
   <ItemGroup>
     <Compile Remove="Data\**" />
     <Compile Remove="Repositories\**" />
+    <Compile Remove="Views\List\**" />
+    <Compile Remove="Views\LoanApp\**" />
     <Content Remove="Data\**" />
     <Content Remove="Repositories\**" />
+    <Content Remove="Views\List\**" />
+    <Content Remove="Views\LoanApp\**" />
     <EmbeddedResource Remove="Data\**" />
     <EmbeddedResource Remove="Repositories\**" />
+    <EmbeddedResource Remove="Views\List\**" />
+    <EmbeddedResource Remove="Views\LoanApp\**" />
     <None Remove="Data\**" />
     <None Remove="Repositories\**" />
+    <None Remove="Views\List\**" />
+    <None Remove="Views\LoanApp\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\HomeController.cs" />
-    <Compile Remove="Models\BusinessListViewModel.cs" />
+    <Compile Remove="Controllers\ListController.cs" />
+    <Compile Remove="Controllers\LoanAppController.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\Business\Delete.cshtml" />
     <Content Remove="Views\Business\Details.cshtml" />
-    <Content Remove="Views\Business\List.cshtml" />
     <Content Remove="Views\Demographic\Delete.cshtml" />
     <Content Remove="Views\Demographic\Details.cshtml" />
-    <Content Remove="Views\LoanApp\Delete.cshtml" />
-    <Content Remove="Views\LoanApp\Details.cshtml" />
     <Content Remove="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Business\Create.cshtml" />
+    <None Include="Views\Business\Edit.cshtml" />
+    <None Include="Views\Business\Index.cshtml" />
+    <None Include="Views\Business\List.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SharedClassLibrary.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LoanAppWebAPI.DTO.LoanApps
+namespace LoanAppMVC.Client.LoanApiResponseDto
 {
     public class LoanAppResponseDto
     {
@@ -17,7 +18,7 @@ namespace LoanAppWebAPI.DTO.LoanApps
 
         [DataType(DataType.Date)]
         public DateTime DateSubmitted { get; set; }
-        
+
         [DataType(DataType.Date)]
         public DateTime? DateProcessed { get; set; }
         public int Status { get; set; }
@@ -28,6 +29,5 @@ namespace LoanAppWebAPI.DTO.LoanApps
         public int BusinessId { get; set; }
         public string? BusinessCode { get; set; }
         public string? BusinessName { get; set; }
-
     }
 }
