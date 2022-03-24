@@ -1,29 +1,32 @@
 ﻿
 namespace SharedClassLibrary
 {
-    public class PaginatedList<T>// : List<T>
+    [Serializable]
+    public class PaginatedList<T>  // : List<T>
     {
-        public int PageIndex { get; private set; }
-        public int TotalPages { get; private set; }
-        public int TotalCount { get; private set; }
+        public int pageIndex { get; set; }
+        public int totalPages { get; set; }
+        public int totalCount { get; set; }
        
-        public List<T> List { get; private set; }
-        public PaginatedList() { }
-
-        public PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
-        {
-            PageIndex = pageIndex;
-            TotalCount = count;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-            // this.AddRange(items);
-            this.List = new List<T>();
-            this.List.AddRange(items);
+        public List<T> list { get; set; }
+        public PaginatedList() {
+        //    this.list = new List<T>();
         }
 
-        public bool HasPreviousPage => PageIndex > 1;
+        private PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
+        {
+            this.pageIndex = pageIndex;
+            totalCount = count;
+            totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
-        public bool HasNextPage => PageIndex < TotalPages;
+            // this.AddRange(items);
+            this.list = new List<T>();
+            this.list.AddRange(items);
+        }
+
+        public bool hasPreviousPage => pageIndex > 1;
+
+        public bool hasNextPage => pageIndex < totalPages;
 
         public static PaginatedList<T> SliceAndCreate(IList<T> source, int pageIndex, int pageSize)
         {

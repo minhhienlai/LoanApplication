@@ -21,18 +21,16 @@ namespace LoanAppWebAPI.Controllers
         #region GET
         // GET: api/<DemographicController>
         [HttpGet]
-        public PaginatedList<DemographicViewResponseDto> GetPaging([FromQuery] int? pageNumber, int? pageSize)
+        public IActionResult GetPaging([FromQuery] int? pageNumber, int? pageSize)
         {
             PaginatedList<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetPaging(pageNumber, pageSize);
-            if (results.List.Count() == 0) return null;// NotFound();
+            if (results.list.Count() == 0) return NotFound();
             List<DemographicViewResponseDto> resultsDto = new List<DemographicViewResponseDto>();
-            foreach (var result in results.List)
+            foreach (var result in results.list)
             {
                 resultsDto.Add(DemographicMapper.ToDemographicViewResponse(result));
             }
-            PaginatedList<DemographicViewResponseDto> resultss = PaginatedList<DemographicViewResponseDto>.Create(resultsDto, results.TotalCount, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
-            //return Ok(resultss);
-            return resultss;
+            return Ok(PaginatedList<DemographicViewResponseDto>.Create(resultsDto, results.totalCount, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE));
         }
 
         // GET api/<DemographicController>/5

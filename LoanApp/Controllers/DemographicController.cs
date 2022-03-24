@@ -1,10 +1,11 @@
 ﻿#nullable disable
 using LoanAppMVC.Client.LoanApiRequestDto;
 using LoanAppMVC.Client.LoanApiResponseDto;
-using LoanAppMVC.Models;
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SharedClassLibrary;
+using System.Text;
 
 namespace LoanAppMVC.Controllers
 {
@@ -19,26 +20,17 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Demographic
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? pageNumber)
         {
-
+            StringBuilder sb = new StringBuilder();
+            sb.Append(apiController);
+            if (pageNumber!=null) sb.Append("?pageNumber="+pageNumber.ToString());
+            var result = await _httpClient.GetAsync(sb.ToString());
             PaginatedList<DemographicViewResponseDto> models = new PaginatedList<DemographicViewResponseDto>();
-
-            var result = await _httpClient.GetAsync(apiController);
-            models = await result.Content.ReadAsAsync<PaginatedList<DemographicViewResponseDto>>();
             if (result.IsSuccessStatusCode)
             {
-                //models = await result.Content.ReadAsAsync<PaginatedList<DemographicViewResponseDto>>();
-                //readTask.Wait();
-
-                //models = readTask.Result;
-
-
-                //string data = await result.Content.ReadAsStringAsync();
-                ////use JavaScriptSerializer from System.Web.Script.Serialization
-                //JavaScriptSerializer JSserializer = new JavaScriptSerializer();
-                ////deserialize to your class
-                //products = JSserializer.Deserialize<List<Product>>(data);
+                string data = await result.Content.ReadAsStringAsync();
+                models = JsonConvert.DeserializeObject<PaginatedList<DemographicViewResponseDto>>(data);
             }
             else //web api sent error response 
             {
@@ -59,17 +51,17 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DemographicRequestDto model)
         {
-                var result = await _httpClient.PostAsJsonAsync<DemographicRequestDto>(apiController, model);
+            var result = await _httpClient.PostAsJsonAsync<DemographicRequestDto>(apiController, model);
 
-                if (result.IsSuccessStatusCode)
-                {
-                    int newId = result.Content.ReadAsAsync<int>().Result;
-                    return RedirectToAction("Create", "Business", new { ownerId = newId});
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Server Error. Please contact administrator.");
-                }
+            if (result.IsSuccessStatusCode)
+            {
+                int newId = result.Content.ReadAsAsync<int>().Result;
+                return RedirectToAction("Create", "Business", new { ownerId = newId });
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server Error. Please contact administrator.");
+            }
 
 
             return View(model);
@@ -85,7 +77,7 @@ namespace LoanAppMVC.Controllers
 
             DemographicEditableResponseDto model = new DemographicEditableResponseDto();
 
-            var result = await _httpClient.GetAsync(apiController+"/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController + "/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
                 var readTask = result.Content.ReadAsAsync<DemographicEditableResponseDto>();
@@ -108,13 +100,13 @@ namespace LoanAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, DemographicRequestDto model)
         {
-            int oid=0;
+            int oid = 0;
             if (id != model.Id)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
             }
@@ -125,15 +117,14 @@ namespace LoanAppMVC.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     oid = result.Content.ReadAsAsync<int>().Result;
-                    return RedirectToAction("List","Business", new { ownerId= oid });
+                    return RedirectToAction("List", "Business", new { ownerId = oid });
                 }
             }
             ViewData["OwnerId"] = oid;
             return View(model);
         }
 
-        // GET: Demographic/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteAction(int? id)
         {
             if (id == null)
             {
