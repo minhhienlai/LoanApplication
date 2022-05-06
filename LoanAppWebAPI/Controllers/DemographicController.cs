@@ -23,7 +23,8 @@ namespace LoanAppWebAPI.Controllers
         [HttpGet]
         public IActionResult GetPaging([FromQuery] int? pageNumber, int? pageSize)
         {
-            PaginatedList<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetPaging(pageNumber, pageSize);
+            var listAll = _unitOfWork.GetDemographicRepository().GetAll();
+            var results = PaginatedList<DemographicModel>.SliceAndCreate(listAll, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
             if (results.list.Count() == 0) return NotFound();
             List<DemographicViewResponseDto> resultsDto = new List<DemographicViewResponseDto>();
             foreach (var result in results.list)

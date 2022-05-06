@@ -28,7 +28,7 @@ namespace LoanAppWebAPI.Models
 
         public override string TableName => "LoanApps";
 
-        public LoanAppModel InitTestValue()
+        public LoanAppModel Init()
         {
             Random r = new Random();
             APRPercent = r.Next(4, 12);

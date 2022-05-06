@@ -28,13 +28,13 @@ namespace SharedClassLibrary
 
         public bool hasNextPage => pageIndex < totalPages;
 
-        public static PaginatedList<T> SliceAndCreate(IList<T> source, int pageIndex, int pageSize)
+        public static PaginatedList<T> SliceAndCreate(IEnumerable<T> source, int pageIndex, int pageSize)
         {
             var count = source.Count();
             IEnumerable<T> items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize);
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
-        public static PaginatedList<T> Create(IList<T> source, int count, int pageIndex, int pageSize)
+        public static PaginatedList<T> Create(IEnumerable<T> source, int count, int pageIndex, int pageSize)
         {
             return new PaginatedList<T>(source, count, pageIndex, pageSize);
         }

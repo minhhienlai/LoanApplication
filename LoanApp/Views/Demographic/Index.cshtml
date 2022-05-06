@@ -3,16 +3,11 @@
 @model PaginatedList<DemographicViewResponseDto>
 @{
     ViewData["Title"] = "Index";
-}
-@{
     var prevDisabled = !Model.hasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.hasNextPage ? "disabled" : "";
 }
 
 <h1>Index</h1>
-@{
-    var ownerId = ViewData["OwnerId"];
-}
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -64,9 +59,8 @@
                 @Html.DisplayFor(modelItem => item.Zipcode)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-action="DeleteAction" method="post" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-pageNo="@Model.pageIndex">Edit</a> |
+                <a asp-action="DeleteAction" method="post" asp-route-id="@item.Id" asp-route-pageNumber="@Model.pageIndex"  onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
             </td>
         </tr>
 }

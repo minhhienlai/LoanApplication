@@ -5,7 +5,7 @@ namespace LoanAppWebAPI.Mapper
 {
     public class LoanAppMapper
     {
-        public static LoanAppResponseDto ToBusinessResponse(LoanAppModel model)
+        public static LoanAppResponseDto ToLoanAppResponse(LoanAppModel model)
         {
             return new LoanAppResponseDto
             {
@@ -24,30 +24,28 @@ namespace LoanAppWebAPI.Mapper
                 CreatedBy = model.CreatedBy,
                 ModifiedBy = model.ModifiedBy,
                 ModifiedAt = model.ModifiedAt,
-                BusinessCode = model.Business.BusinessCode,
-                BusinessName = model.Business.Name
+                BusinessId = model.BusinessId,
+                BusinessCode = model.Business == null? null : model.Business.BusinessCode,
+                BusinessName = model.Business == null ? null : model.Business.Name
             };
         }
 
-        public static LoanAppModel InsertToBusinessModel(LoanAppRequestDto dto)
+        public static LoanAppModel InsertToLoanAppModel(LoanAppRequestDto dto)
         {
-            return new LoanAppModel
+            var result =  new LoanAppModel
             {
                 Amount = dto.Amount,
                 PayBackInMonths = dto.PayBackInMonths,
-                APRPercent = dto.APRPercent,
-                CreditScore = dto.CreditScore,
-                LatePaymentRate = dto.LatePaymentRate,
-                TotalDebt = dto.TotalDebt,
-                RiskRate = dto.RiskRate,
                 DateSubmitted = dto.DateSubmitted,
                 DateProcessed = dto.DateProcessed,
                 Status = dto.Status,
                 CreatedBy = dto.UserRequested,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                BusinessId = dto.BusinessId
             };
+            return result.Init();
         }
-        public static LoanAppModel UpdateToBusinessModel(LoanAppRequestDto dto)
+        public static LoanAppModel UpdateToLoanAppModel(LoanAppRequestDto dto)
         {
             return new LoanAppModel
             {
@@ -63,7 +61,8 @@ namespace LoanAppWebAPI.Mapper
                 DateProcessed = dto.DateProcessed,
                 Status = dto.Status,
                 ModifiedBy = dto.UserRequested,
-                ModifiedAt = DateTime.Now
+                ModifiedAt = DateTime.Now,
+                BusinessId = dto.BusinessId
             };
         }
     }

@@ -56,7 +56,7 @@ namespace LoanAppMVC.Controllers
             if (result.IsSuccessStatusCode)
             {
                 int newId = result.Content.ReadAsAsync<int>().Result;
-                return RedirectToAction("Create", "Business", new { ownerId = newId });
+                return RedirectToAction("List", "Business", new { ownerId = newId });
             }
             else
             {
@@ -68,7 +68,7 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Demographic/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int? pageNo)
         {
             if (id == null)
             {
@@ -84,6 +84,7 @@ namespace LoanAppMVC.Controllers
                 readTask.Wait();
 
                 model = readTask.Result;
+                model.CurrentPage = pageNo.HasValue ? pageNo.Value:1;
             }
             else //web api sent error response 
             {
@@ -124,14 +125,14 @@ namespace LoanAppMVC.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> DeleteAction(int? id)
+        public async Task<IActionResult> DeleteAction(int? id, [FromQuery] int? pageNumber)
         {
             if (id == null)
             {
                 return NotFound();
             }
             var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { pageNumber  = pageNumber});
         }
     }
 }
