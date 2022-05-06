@@ -1,7 +1,11 @@
 ﻿#nullable disable
-using LoanAppMVC.Models;
+using LoanAppMVC.Client.LoanApiRequestDto;
+using LoanAppMVC.Client.LoanApiResponseDto;
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SharedClassLibrary;
+using System.Text;
 
 namespace LoanAppMVC.Controllers
 {
@@ -16,18 +20,17 @@ namespace LoanAppMVC.Controllers
         }
 
         // GET: Demographic
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? pageNumber)
         {
-            
-            IList<DemographicModel> models = new List<DemographicModel>();
-
-            var result = await _httpClient.GetAsync(apiController);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(apiController);
+            if (pageNumber!=null) sb.Append("?pageNumber="+pageNumber.ToString());
+            var result = await _httpClient.GetAsync(sb.ToString());
+            PaginatedList<DemographicViewResponseDto> models = new PaginatedList<DemographicViewResponseDto>();
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<IList<DemographicModel>>();
-                readTask.Wait();
-
-                models = readTask.Result;
+                string data = await result.Content.ReadAsStringAsync();
+                models = JsonConvert.DeserializeObject<PaginatedList<DemographicViewResponseDto>>(data);
             }
             else //web api sent error response 
             {
@@ -46,41 +49,42 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
+        public async Task<IActionResult> Create(DemographicRequestDto model)
         {
-                var result = await _httpClient.PostAsJsonAsync<DemographicModel>(apiController, model);
+            var result = await _httpClient.PostAsJsonAsync<DemographicRequestDto>(apiController, model);
 
-                if (result.IsSuccessStatusCode)
-                {
-                    int newId = result.Content.ReadAsAsync<int>().Result;
-                    return RedirectToAction("Create", "Business", new { ownerId = newId});
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Server Error. Please contact administrator.");
-                }
+            if (result.IsSuccessStatusCode)
+            {
+                int newId = result.Content.ReadAsAsync<int>().Result;
+                return RedirectToAction("List", "Business", new { ownerId = newId });
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Server Error. Please contact administrator.");
+            }
 
 
             return View(model);
         }
 
         // GET: Demographic/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int? pageNo)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            DemographicModel model = new DemographicModel();
+            DemographicEditableResponseDto model = new DemographicEditableResponseDto();
 
-            var result = await _httpClient.GetAsync(apiController+"/" + id.ToString());
+            var result = await _httpClient.GetAsync(apiController + "/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<DemographicModel>();
+                var readTask = result.Content.ReadAsAsync<DemographicEditableResponseDto>();
                 readTask.Wait();
 
                 model = readTask.Result;
+                model.CurrentPage = pageNo.HasValue ? pageNo.Value:1;
             }
             else //web api sent error response 
             {
@@ -95,41 +99,40 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,PhoneNo,Email")] DemographicModel model)
+        public async Task<IActionResult> Edit(int id, DemographicRequestDto model)
         {
-            int oid=0;
+            int oid = 0;
             if (id != model.Id)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
             }
             else
             {
                 //HTTP POST
-                var result = await _httpClient.PutAsJsonAsync<DemographicModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<DemographicRequestDto>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
                     oid = result.Content.ReadAsAsync<int>().Result;
-                    return RedirectToAction("List","Business", new { ownerId= oid });
+                    return RedirectToAction("List", "Business", new { ownerId = oid });
                 }
             }
             ViewData["OwnerId"] = oid;
             return View(model);
         }
 
-        // GET: Demographic/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteAction(int? id, [FromQuery] int? pageNumber)
         {
             if (id == null)
             {
                 return NotFound();
             }
             var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
-            return RedirectToAction("Index","List");
+            return RedirectToAction("Index", new { pageNumber  = pageNumber});
         }
     }
 }

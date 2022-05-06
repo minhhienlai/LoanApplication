@@ -5,16 +5,35 @@ namespace LoanAppWebAPI.Mapper
 {
     public static class DemographicMapper
     {
-        public static DemographicResponseDto ToDemographicResponse(DemographicModel model)
+        public static DemographicEditableResponseDto ToDemographicEditableResponse(DemographicModel model)
         {
-            return new DemographicResponseDto
+            return new DemographicEditableResponseDto
+            {
+                Id = model.Id,
+                FirstName = model.FirstName, 
+                LastName = model.LastName,
+                PhoneNo = model.PhoneNo,
+                Email = model.Email,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                State = model.State,
+                Zipcode = model.Zipcode,
+                CreatedAt = model.CreatedAt,
+                CreatedBy = model.CreatedBy,
+                ModifiedBy = model.ModifiedBy,
+                ModifiedAt = model.ModifiedAt
+            };
+        }
+
+        public static DemographicViewResponseDto ToDemographicViewResponse(DemographicModel model)
+        {
+            return new DemographicViewResponseDto
             {
                 Id = model.Id,
                 FullName = model.FirstName + " " + model.LastName,
                 PhoneNo = model.PhoneNo,
                 Email = model.Email,
-                Address1 = model.Address1,
-                Address2 = model.Address2,
+                Address = model.Address1 + " " + model.Address2,
                 State = model.State,
                 Zipcode = model.Zipcode,
                 CreatedAt = model.CreatedAt,

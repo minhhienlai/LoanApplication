@@ -1,29 +1,43 @@
 ﻿
 namespace SharedClassLibrary
 {
-    public class PaginatedList<T> : List<T>
+    [Serializable]
+    public class PaginatedList<T>  // : List<T>
     {
-        public int PageIndex { get; private set; }
-        public int TotalPages { get; private set; }
-        public PaginatedList() { }
-
-        public PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
-        {
-            PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-            this.AddRange(items);
+        public int pageIndex { get; set; }
+        public int totalPages { get; set; }
+        public int totalCount { get; set; }
+       
+        public List<T> list { get; set; }
+        public PaginatedList() {
+        //    this.list = new List<T>();
         }
 
-        public bool HasPreviousPage => PageIndex > 1;
+        private PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
+        {
+            this.pageIndex = pageIndex;
+            totalCount = count;
+            totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
-        public bool HasNextPage => PageIndex < TotalPages;
+            // this.AddRange(items);
+            this.list = new List<T>();
+            this.list.AddRange(items);
+        }
 
-        public static PaginatedList<T> Create(IList<T> source, int pageIndex, int pageSize)
+        public bool hasPreviousPage => pageIndex > 1;
+
+        public bool hasNextPage => pageIndex < totalPages;
+
+        public static PaginatedList<T> SliceAndCreate(IEnumerable<T> source, int pageIndex, int pageSize)
         {
             var count = source.Count();
             IEnumerable<T> items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize);
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
+        public static PaginatedList<T> Create(IEnumerable<T> source, int count, int pageIndex, int pageSize)
+        {
+            return new PaginatedList<T>(source, count, pageIndex, pageSize);
+        }
+
     }
 }

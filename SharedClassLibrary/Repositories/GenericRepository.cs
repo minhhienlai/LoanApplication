@@ -21,10 +21,9 @@ namespace SharedClassLibrary.Repositories
         {
             return table.ToList();
         }
-        public PaginatedList<T> GetPaging(int? pageNumber, int? pageSize)
+        public PaginatedList<T> GetPaging(List<T> listAll,int? pageNumber, int? pageSize)
         {
-            List<T> listAll = table.ToList();
-            return PaginatedList<T>.Create(listAll, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
+            return PaginatedList<T>.SliceAndCreate(listAll, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
         }
         public T GetById(object id)
         {

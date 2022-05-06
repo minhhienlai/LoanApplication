@@ -1,7 +1,11 @@
 ﻿#nullable disable
+using LoanAppMVC.Client.LoanApiRequestDto;
+using LoanAppMVC.Client.LoanApiResponseDto;
 using LoanAppMVC.Models;
 using LoanAppMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SharedClassLibrary;
 
 namespace LoanAppMVC.Controllers
 {
@@ -16,12 +20,12 @@ namespace LoanAppMVC.Controllers
         // GET: Business
         public async Task<IActionResult> Index()
         {
-            IList<BusinessModel> models = new List<BusinessModel>();
+            IList<BusinessResponseDto> models = new List<BusinessResponseDto>();
 
             var result = await _httpClient.GetAsync(apiController);
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<IList<BusinessModel>>();
+                var readTask = result.Content.ReadAsAsync<IList<BusinessResponseDto>>();
                 readTask.Wait();
 
                 models = readTask.Result;
@@ -35,28 +39,24 @@ namespace LoanAppMVC.Controllers
 
         public async Task<IActionResult> List(int ownerid)
         {
-            IList<BusinessModel> models = new List<BusinessModel>();
-
             var result = await _httpClient.GetAsync(apiController+"/GetByDemo/"+ ownerid.ToString());
+            var models = new PaginatedList<BusinessResponseDto>();
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<IList<BusinessModel>>();
-                readTask.Wait();
-
-                models = readTask.Result;
+                string data = await result.Content.ReadAsStringAsync();
+                models = JsonConvert.DeserializeObject<PaginatedList<BusinessResponseDto>>(data);
             }
             else //web api sent error response 
             {
                 ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
             }
             ViewData["OwnerId"] = ownerid;
-            return View("Index", models);
-                //new BusinessListViewModel { modelList = models, OwnerId  = ownerid});
+            return View("List", models);
         }
 
         public IActionResult Create(int? ownerId)
         {
-            BusinessModel model = new BusinessModel();
+            BusinessRequestDto model = new BusinessRequestDto();
             model.OwnerId = ownerId.HasValue? ownerId.Value:0;
             return View(model);
         }
@@ -66,14 +66,14 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BusinessModel model)
+        public async Task<IActionResult> Create(BusinessRequestDto model)
         {
-            var result = await _httpClient.PostAsJsonAsync<BusinessModel>(apiController, model);
+            var result = await _httpClient.PostAsJsonAsync<BusinessRequestDto>(apiController, model);
 
             if (result.IsSuccessStatusCode)
             {
                 int newId = result.Content.ReadAsAsync<int>().Result;
-                return RedirectToAction("Create", "LoanApp", new { businessId = newId });
+                return RedirectToAction("List", "LoanApp", new { businessId = newId });
             }
             else
             {
@@ -92,12 +92,12 @@ namespace LoanAppMVC.Controllers
                return NotFound();
             }
 
-            BusinessModel model = new BusinessModel();
+            var model = new BusinessResponseDto();
 
             var result = await _httpClient.GetAsync(apiController + "/" + id.ToString());
             if (result.IsSuccessStatusCode)
             {
-                var readTask = result.Content.ReadAsAsync<BusinessModel>();
+                var readTask = result.Content.ReadAsAsync<BusinessResponseDto>();
                 readTask.Wait();
 
                 model = readTask.Result;
@@ -115,7 +115,7 @@ namespace LoanAppMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BusinessCode,Name,Description,OwnerId")] BusinessModel model)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BusinessCode,Name,Description,OwnerId")] BusinessRequestDto model)
         {
             if (id != model.Id)
             {
@@ -129,7 +129,7 @@ namespace LoanAppMVC.Controllers
             else
             {
                 //HTTP POST
-                var result = await _httpClient.PutAsJsonAsync<BusinessModel>(apiController, model);
+                var result = await _httpClient.PutAsJsonAsync<BusinessRequestDto>(apiController, model);
                 if (result.IsSuccessStatusCode)
                 {
                     int oid = result.Content.ReadAsAsync<int>().Result;
@@ -139,16 +139,14 @@ namespace LoanAppMVC.Controllers
             return View(model);
         }
 
-        // GET: Business/Delete/5
-        public async Task<IActionResult> Delete(int? id, int? ownerId)
+        public async Task<IActionResult> DeleteAction(int? id, int? ownerId, [FromQuery] int? pageNumber)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            string request = apiController + "/" + id.ToString();
-            var result = await _httpClient.DeleteAsync(request);
-            return RedirectToAction("List","Business", new {ownerId = ownerId});
+            var result = await _httpClient.DeleteAsync(apiController + "/" + id.ToString());
+            return RedirectToAction("List","Business", new { ownerid = ownerId });
         }
     }
 }

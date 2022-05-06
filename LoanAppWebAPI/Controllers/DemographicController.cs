@@ -3,6 +3,7 @@ using LoanAppWebAPI.Mapper;
 using LoanAppWebAPI.Models;
 using LoanAppWebAPI.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
+using SharedClassLibrary;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,28 +21,17 @@ namespace LoanAppWebAPI.Controllers
         #region GET
         // GET: api/<DemographicController>
         [HttpGet]
-        public IActionResult Get()
-        {
-            IEnumerable<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetAll();
-            if (results.Count() == 0) return NotFound();
-            List<DemographicResponseDto> resultsDto = new List<DemographicResponseDto>();
-            foreach (var result in results)
-            {
-                resultsDto.Add(DemographicMapper.ToDemographicResponse(result));
-            }
-            return Ok(resultsDto);
-        }
-        [HttpGet("GetPaging")]
         public IActionResult GetPaging([FromQuery] int? pageNumber, int? pageSize)
         {
-            IEnumerable<DemographicModel> results = _unitOfWork.GetDemographicRepository().GetPaging(pageNumber, pageSize);
-            if (results.Count() == 0) return NotFound();
-            List<DemographicResponseDto> resultsDto = new List<DemographicResponseDto>();
-            foreach (var result in results)
+            var listAll = _unitOfWork.GetDemographicRepository().GetAll();
+            var results = PaginatedList<DemographicModel>.SliceAndCreate(listAll, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE);
+            if (results.list.Count() == 0) return NotFound();
+            List<DemographicViewResponseDto> resultsDto = new List<DemographicViewResponseDto>();
+            foreach (var result in results.list)
             {
-                resultsDto.Add(DemographicMapper.ToDemographicResponse(result));
+                resultsDto.Add(DemographicMapper.ToDemographicViewResponse(result));
             }
-            return Ok(resultsDto);
+            return Ok(PaginatedList<DemographicViewResponseDto>.Create(resultsDto, results.totalCount, pageNumber ?? 1, pageSize ?? Common.DEFAULT_PAGE_SIZE));
         }
 
         // GET api/<DemographicController>/5
@@ -50,7 +40,7 @@ namespace LoanAppWebAPI.Controllers
         {
             DemographicModel result = _unitOfWork.GetDemographicRepository().GetById(id);
             if (result == null) return NotFound();
-            return Ok(DemographicMapper.ToDemographicResponse(result));
+            return Ok(DemographicMapper.ToDemographicEditableResponse(result));
         }
         #endregion
         #region POST PUT
